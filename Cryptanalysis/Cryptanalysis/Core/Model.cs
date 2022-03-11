@@ -36,10 +36,12 @@ namespace Cryptanalysis.Core {
             connections.Add(new InternalConnection(newSource, newTarget));
         }
         private void AddStandardConnection(Model m, Connection connection) {
-            OutSlot srcSlot = (OutSlot)connection.GetSource;
-            InSlot trgSlot = (InSlot)connection.GetTarget;
-            OutSlot newSource = null;
-            InSlot newTarget = null;
+            OutSlot 
+                srcSlot = (OutSlot)connection.GetSource,
+                newSource = null;
+            InSlot 
+                trgSlot = (InSlot)connection.GetTarget,            
+                newTarget = null;
             for (int i = 0; i < gates.Count; i++) {
                 for (int y = 0; y < gates[i].InputsCount; y++) {
                     if (m.gates[i].GetInput(y) == trgSlot)
@@ -76,9 +78,8 @@ namespace Cryptanalysis.Core {
             this.connections.AddRange(connections);
         }
         override public void Run() {
-            foreach (var gate in gates) {
-                gate.Run();
-            }
+            foreach (var gate in gates) 
+                gate.Run();            
             hasChanged = false;
             foreach (var con in connections) {
                 if (con.Transfer())
