@@ -8,48 +8,49 @@ namespace Cryptanalysis.Core {
             gates = new List<Gate>();
             connections = new List<AbstractConnection>();
         }
-        public Model(Model m) : this(m.Name) {
-            foreach (var gate in m.gates) {
-                gates.Add(gate.Duplicate());
-            }
-            // TODO - The following code should be extracted into more methods
+        private Model(Model m) : this(m.Name) {
+            foreach (var gate in m.gates) 
+                gates.Add(gate.Duplicate());            
             foreach (var con in m.connections) {
-                if(con is InternalConnection intCon) {
-                    InSlot srcSlot = (InSlot)intCon.GetSource;
-                    OutSlot trgSlot = (OutSlot)intCon.GetTarget;
-                    InSlot newSource=null;
-                    OutSlot newTarget=null;
-                    for (int i = 0; i < gates.Count; i++) {
-                        for (int y = 0; y < gates[i].InputsCount; y++) {
-                            if (m.gates[i].GetInput(y) == srcSlot)
-                                newSource = gates[i].GetInput(y);
-                        }
-                        for (int y = 0; y < gates[i].OutputsCount; y++) {
-                            if (m.gates[i].GetOutput(y) == trgSlot)
-                                newTarget = gates[i].GetOutput(y);
-                        }
-                    }
-                    connections.Add(new InternalConnection(newSource, newTarget));
+                if(con is InternalConnection intCon) 
+                    AddInternalConnection(m, intCon);                
+                else if (con is Connection connection) 
+                    AddStandardConnection(m, connection);                
+            }             
+        }
+        private void AddInternalConnection(Model m, InternalConnection intCon) {
+            InSlot srcSlot = (InSlot)intCon.GetSource;
+            OutSlot trgSlot = (OutSlot)intCon.GetTarget;
+            InSlot newSource = null;
+            OutSlot newTarget = null;
+            for (int i = 0; i < gates.Count; i++) {
+                for (int y = 0; y < gates[i].InputsCount; y++) {
+                    if (m.gates[i].GetInput(y) == srcSlot)
+                        newSource = gates[i].GetInput(y);
                 }
-                else if (con is Connection connection) {
-                    OutSlot srcSlot = (OutSlot)connection.GetSource;
-                    InSlot trgSlot = (InSlot)connection.GetTarget;
-                    OutSlot newSource=null;
-                    InSlot newTarget=null;
-                    for (int i = 0; i < gates.Count; i++) {
-                        for (int y = 0; y < gates[i].InputsCount; y++) {
-                            if (m.gates[i].GetInput(y) == trgSlot)
-                                newTarget = gates[i].GetInput(y);
-                        }
-                        for (int y = 0; y < gates[i].OutputsCount; y++) {
-                            if (m.gates[i].GetOutput(y) == srcSlot)
-                                newSource = gates[i].GetOutput(y);
-                        }
-                    }
-                    connections.Add(new Connection(newSource, newTarget));
+                for (int y = 0; y < gates[i].OutputsCount; y++) {
+                    if (m.gates[i].GetOutput(y) == trgSlot)
+                        newTarget = gates[i].GetOutput(y);
                 }
             }
-             
+            connections.Add(new InternalConnection(newSource, newTarget));
+        }
+        private void AddStandardConnection(Model m, Connection connection) {
+            OutSlot srcSlot = (OutSlot)connection.GetSource;
+            InSlot trgSlot = (InSlot)connection.GetTarget;
+            OutSlot newSource = null;
+            InSlot newTarget = null;
+            for (int i = 0; i < gates.Count; i++) {
+                for (int y = 0; y < gates[i].InputsCount; y++) {
+                    if (m.gates[i].GetInput(y) == trgSlot)
+                        newTarget = gates[i].GetInput(y);
+                }
+                for (int y = 0; y < gates[i].OutputsCount; y++) {
+                    if (m.gates[i].GetOutput(y) == srcSlot)
+                        newSource = gates[i].GetOutput(y);
+                }
+            }
+            connections.Add(new Connection(newSource, newTarget));
         }
         public void SetInputs(string s) {
             byte[] inputsConverted = Utils.ConvertToByteArr(s);
