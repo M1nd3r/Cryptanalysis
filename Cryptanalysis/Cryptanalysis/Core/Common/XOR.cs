@@ -4,14 +4,14 @@ using static Cryptanalysis.Core.Constants;
 namespace Cryptanalysis.Core.Common {
     class XOR : Gate {
         private int inputsLen;
-        public XOR(string name,int inputsLen):base(name) {
+        public XOR(string name, int inputsLen) : base(name) {
             if (inputsLen < 1)
                 throw new ArgumentException();
             this.inputsLen = inputsLen;
             inputs = InSlot.GetInSlots(2 * inputsLen);
             outputs = OutSlot.GetOutSlots(inputsLen);
         }
-        private XOR(XOR g):this(g.Name,g.inputsLen) {
+        private XOR(XOR g) : this(g.Name, g.inputsLen) {
         }
 
         public override Gate Duplicate() {
@@ -20,21 +20,16 @@ namespace Cryptanalysis.Core.Common {
 
         public override void Run() {
             for (int i = 0; i < inputsLen; i++)
-                outputs[i].Set(xor(inputs[i].Get, inputs[i + inputsLen].Get));            
+                outputs[i].Set(xor(inputs[i].Get, inputs[i + inputsLen].Get));
         }
-        private byte xor(byte a, byte b) {
-            switch ((a, b)) {
-                case (BYTE_ONE, BYTE_ZERO):
-                    return BYTE_ONE;
-                case (BYTE_ZERO, BYTE_ONE):
-                    return BYTE_ONE;
-                case (BYTE_ZERO, BYTE_ZERO):
-                    return BYTE_ZERO;
-                case (BYTE_ONE, BYTE_ONE):
-                    return BYTE_ZERO;
-                default:
-                    return BYTE_UNDEFINED;
-            }
+        private static byte xor(byte a, byte b) {
+            return (a, b) switch {
+                (BYTE_ONE, BYTE_ZERO) => BYTE_ONE,
+                (BYTE_ZERO, BYTE_ONE) => BYTE_ONE,
+                (BYTE_ZERO, BYTE_ZERO) => BYTE_ZERO,
+                (BYTE_ONE, BYTE_ONE) => BYTE_ZERO,
+                _ => BYTE_UNDEFINED,
+            };
         }
     }
 }

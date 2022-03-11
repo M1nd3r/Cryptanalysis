@@ -46,13 +46,13 @@ namespace Cryptanalysis.Ciphers {
             Permutation p = new Permutation("permutation", Permutation.ParseParmutationTable("0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15"));
             Key[] key = new Key[6];
             for (int i = 0; i < key.Length; i++)
-                key[i] = new Key("key_" + i.ToString(), keys_byte[i]);          
+                key[i] = new Key("key_" + i.ToString(), keys_byte[i]);
             var sboxRows = new Sbox4x4[5];
             var perms = new Permutation[4];
             var XORs = new XOR[6];
-            for (int i = 0; i < sboxRows.Length; i++) 
+            for (int i = 0; i < sboxRows.Length; i++)
                 sboxRows[i] = (Sbox4x4)sbox4X4.Duplicate();
-            for (int i = 0; i < perms.Length; i++) 
+            for (int i = 0; i < perms.Length; i++)
                 perms[i] = (Permutation)p.Duplicate();
             for (int i = 0; i < XORs.Length; i++)
                 XORs[i] = (XOR)xor.Duplicate();
@@ -64,7 +64,7 @@ namespace Cryptanalysis.Ciphers {
             for (int i = 0; i < 4; i++) {
                 a(Connect(XORs[i], sboxRows[i]));
                 a(Connect(sboxRows[i], perms[i]));
-                a(Connect(perms[i],key[i+1], XORs[i + 1]));
+                a(Connect(perms[i], key[i + 1], XORs[i + 1]));
             }
             a(Connect(XORs[4], sboxRows[4]));
             a(Connect(sboxRows[4], key[5], XORs[5]));
@@ -72,7 +72,7 @@ namespace Cryptanalysis.Ciphers {
 
             //Adding gates to the model - to be executed
             AddGate(dg);
-            foreach (var gate in sboxRows) 
+            foreach (var gate in sboxRows)
                 AddGate(gate);
             foreach (var gate in XORs)
                 AddGate(gate);

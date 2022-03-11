@@ -9,14 +9,14 @@ namespace Cryptanalysis.Core {
             connections = new List<AbstractConnection>();
         }
         private Model(Model m) : this(m.Name) {
-            foreach (var gate in m.gates) 
-                gates.Add(gate.Duplicate());            
+            foreach (var gate in m.gates)
+                gates.Add(gate.Duplicate());
             foreach (var con in m.connections) {
-                if(con is InternalConnection intCon) 
-                    AddInternalConnection(m, intCon);                
-                else if (con is Connection connection) 
-                    AddStandardConnection(m, connection);                
-            }             
+                if (con is InternalConnection intCon)
+                    AddInternalConnection(m, intCon);
+                else if (con is Connection connection)
+                    AddStandardConnection(m, connection);
+            }
         }
         private void AddInternalConnection(Model m, InternalConnection intCon) {
             InSlot srcSlot = (InSlot)intCon.GetSource;
@@ -36,11 +36,11 @@ namespace Cryptanalysis.Core {
             connections.Add(new InternalConnection(newSource, newTarget));
         }
         private void AddStandardConnection(Model m, Connection connection) {
-            OutSlot 
+            OutSlot
                 srcSlot = (OutSlot)connection.GetSource,
                 newSource = null;
-            InSlot 
-                trgSlot = (InSlot)connection.GetTarget,            
+            InSlot
+                trgSlot = (InSlot)connection.GetTarget,
                 newTarget = null;
             for (int i = 0; i < gates.Count; i++) {
                 for (int y = 0; y < gates[i].InputsCount; y++) {
@@ -64,12 +64,11 @@ namespace Cryptanalysis.Core {
         }
         protected List<Gate> gates;
         protected List<AbstractConnection> connections;
-        public void OneStep() { }
         public void AddGate(Gate gate) {
             gates.Add(gate);
         }
         public void AddGates(List<Gate> gates) {
-            gates.AddRange(gates);
+            this.gates.AddRange(gates);
         }
         public void AddConnection(AbstractConnection connection) {
             connections.Add(connection);
@@ -77,9 +76,9 @@ namespace Cryptanalysis.Core {
         public void AddConnections(List<AbstractConnection> connections) {
             this.connections.AddRange(connections);
         }
-        override public void Run() {
-            foreach (var gate in gates) 
-                gate.Run();            
+        public override void Run() {
+            foreach (var gate in gates)
+                gate.Run();
             hasChanged = false;
             foreach (var con in connections) {
                 if (con.Transfer())

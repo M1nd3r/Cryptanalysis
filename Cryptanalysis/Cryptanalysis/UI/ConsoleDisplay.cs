@@ -8,7 +8,7 @@ namespace Cryptanalysis.UI {
         public void PrintModel(Model m);
 
     }
-    class ConsoleDisplay:IDisplay {
+    class ConsoleDisplay : IDisplay {
         private static ConsoleDisplay display = null;
         private ConsoleDisplay() { }
         public static ConsoleDisplay GetConsoleDisplay() {

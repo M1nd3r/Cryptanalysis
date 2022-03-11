@@ -6,7 +6,7 @@ namespace Cryptanalysis.Core.Common {
         public Sbox4(string name, string s) : base(name, CreateTransitionTableSbox4(s)) {
             this.inputString = s;
         }
-        public Sbox4(Sbox4 sbox4):this(sbox4.Name,sbox4.inputString) {
+        public Sbox4(Sbox4 sbox4) : this(sbox4.Name, sbox4.inputString) {
 
         }
         public override Gate Duplicate() {

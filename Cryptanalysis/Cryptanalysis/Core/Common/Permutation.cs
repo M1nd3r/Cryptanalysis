@@ -13,15 +13,15 @@ namespace Cryptanalysis.Core.Common {
             this.table = table;
             SetConnections();
         }
-        public Permutation(Permutation perm):this(perm.Name,perm.table) {
-            
+        public Permutation(Permutation perm) : this(perm.Name, perm.table) {
+
         }
-        public static (int source, int target)[] ParseParmutationTable(string s,char separator=',') {
+        public static (int source, int target)[] ParseParmutationTable(string s, char separator = ',') {
             //TODO - missing validity check
             var nums = s.Split(separator);
             var table = new (int source, int target)[nums.Length];
             for (int i = 0; i < nums.Length; i++) {
-                table[i]=((i, int.Parse(nums[i])));
+                table[i] = ((i, int.Parse(nums[i])));
             }
             return table;
         }

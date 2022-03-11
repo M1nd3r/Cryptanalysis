@@ -1,7 +1,7 @@
 ﻿namespace Cryptanalysis.Core {
     internal static class Constants {
         internal const byte BYTE_ZERO = 0;
-        internal  const byte BYTE_ONE = 1;
+        internal const byte BYTE_ONE = 1;
         internal const byte BYTE_UNDEFINED = 2;
 
         internal const char HEX_0 = '0';
@@ -20,6 +20,5 @@
         internal const char HEX_D = 'D';
         internal const char HEX_E = 'E';
         internal const char HEX_F = 'F';
-
     }
 }

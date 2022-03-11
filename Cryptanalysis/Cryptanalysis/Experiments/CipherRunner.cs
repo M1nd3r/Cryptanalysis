@@ -7,10 +7,10 @@ namespace Cryptanalysis.Experiments {
         private Model model;
         private IDisplay display;
         public CipherRunner() {
-            this.model = new CipherFour();            
+            this.model = new CipherFour();
             this.display = ConsoleDisplay.GetConsoleDisplay();
         }
-        public void Run(int times=1) {
+        public void Run(int times = 1) {
             for (int i = 0; i < times; i++) {
                 model.Run();
             }

@@ -81,8 +81,9 @@ namespace Cryptanalysis.Core {
             return MakeConnection(from, to);
         }
         public static List<AbstractConnection> ConnectModelInput(Model m, Gate target) {
-            var l = new List<Gate>();
-            l.Add(target);
+            var l = new List<Gate> {
+                target
+            };
             return ConnectModelInput(m, l);
         }
         public static List<AbstractConnection> ConnectModelInput(Model m, List<Gate> targets) {
@@ -102,8 +103,9 @@ namespace Cryptanalysis.Core {
             return MakeConnection(from, to);
         }
         public static List<AbstractConnection> ConnectModelOutput(Gate source, Model m) {
-            var l = new List<Gate>();
-            l.Add(source);
+            var l = new List<Gate> {
+                source
+            };
             return ConnectModelOutput(l, m);
         }
         public static List<AbstractConnection> ConnectModelOutput(List<Gate> sources, Model m) {
@@ -116,7 +118,7 @@ namespace Cryptanalysis.Core {
             }
             for (int y = 0; y < m.OutputsCount; y++) {
                 to.Add(m.GetOutput(y));
-            }            
+            }
             if (from.Count != to.Count)
                 throw new ArgumentException();
             return MakeConnection(from, to);
@@ -128,6 +130,6 @@ namespace Cryptanalysis.Core {
                 r.Add(new UniversalConnection(from[i], to[i]));
             }
             return r;
-        } 
+        }
     }
 }
