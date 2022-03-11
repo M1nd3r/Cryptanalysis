@@ -5,7 +5,7 @@ using static Cryptanalysis.Core.Constants;
 namespace Cryptanalysis.Core {
     internal static class Utils {
         internal static bool IsBin(byte val)
-            => val == BYTE_ZERO || val == BYTE_ONE;
+            => val is BYTE_ZERO or BYTE_ONE;
         internal static bool IsBin(byte val1, byte val2)
             => (val1 == BYTE_ZERO || val1 == BYTE_ONE)
             && (val2 == BYTE_ZERO || val2 == BYTE_ONE);

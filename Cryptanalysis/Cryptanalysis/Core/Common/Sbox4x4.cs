@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cryptanalysis.Core.Common {
     class Sbox4x4 : Model {
-        private Sbox4 sboxType = null;
+        private Sbox4 sboxType;
         public Sbox4x4(string name, Sbox4 sbox) : base(name) {
             sboxType = sbox;
             gates = new List<Gate>();

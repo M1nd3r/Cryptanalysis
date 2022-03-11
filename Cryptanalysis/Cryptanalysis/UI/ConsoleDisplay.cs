@@ -9,7 +9,7 @@ namespace Cryptanalysis.UI {
 
     }
     class ConsoleDisplay : IDisplay {
-        private static ConsoleDisplay display = null;
+        private static ConsoleDisplay display;
         private ConsoleDisplay() { }
         public static ConsoleDisplay GetConsoleDisplay() {
             if (display == null)
