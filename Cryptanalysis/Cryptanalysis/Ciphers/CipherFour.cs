@@ -15,17 +15,29 @@ namespace Cryptanalysis.Ciphers {
     class CipherFour : Model {
         byte[][] keys_byte;
 
+        private void SetKeysRandomly() {
+            keys_byte = new byte[6][];
+            for (int i = 0; i < keys_byte.Length; i++) {
+                keys_byte[i] = GetRndKey(16);
+            }
+        }
+        private void SetKeysSample() {
+            keys_byte = new byte[6][];
+            keys_byte[0] = ConvertToBinary(23442, 16);
+            keys_byte[1] = ConvertToBinary(1611, 16);
+            keys_byte[2] = ConvertToBinary(7683, 16);
+            keys_byte[3] = ConvertToBinary(42335, 16);
+            keys_byte[4] = ConvertToBinary(60605, 16);
+            keys_byte[5] = ConvertToBinary(31909, 16);
+        }
         public CipherFour() : base("CipherFour") {
             for (int i = 0; i < 16; i++) {
                 inputs.Add(new InSlot());
                 outputs.Add(new OutSlot());
             }
-            
+
             //Keys creation
-            keys_byte = new byte[6][];
-            for (int i = 0; i < keys_byte.Length; i++) {
-                keys_byte[i] = GetRndKey(16);
-            }
+            SetKeysSample();
 
             //Gates and their definitions
             Sbox4 sbox = new Sbox4("sbox", "64C5072E1F3D8A9B");

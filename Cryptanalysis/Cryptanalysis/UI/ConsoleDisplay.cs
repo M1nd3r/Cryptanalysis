@@ -22,12 +22,12 @@ namespace Cryptanalysis.UI {
             Console.WriteLine("Gate - " + g.ToString() + ": " + g.Name);
             Console.Write("input:  ");
             for (int i = 0; i < g.InputsCount; i++) {
-                Console.Write("{0} ", g.GetInput(i).Get);
+                Console.Write("{0}", g.GetInput(i).Get);
             }
             Console.WriteLine();
             Console.Write("output: ");
             for (int i = 0; i < g.OutputsCount; i++) {
-                Console.Write("{0} ", g.GetOutput(i).Get);
+                Console.Write("{0}", g.GetOutput(i).Get);
             }
             Console.WriteLine();
             Console.WriteLine(separatingLine);
