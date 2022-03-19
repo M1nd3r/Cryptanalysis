@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using Cryptanalysis.F.Core;
+using Cryptanalysis.F.Experiments;
 using static Cryptanalysis.Core.Constants;
 
 namespace Cryptanalysis.Core {
@@ -20,6 +23,8 @@ namespace Cryptanalysis.Core {
         internal static bool IsBinOrUndefined(byte val) => IsBin(val) || IsUndefined(val);
 
         internal static (int, int)[] CreateTransitionTableSbox4(string s) {
+            if (s.Length != 16)
+                throw new ArgumentException("The string does not define bijective sbox");
             var table = new (int, int)[s.Length];
             var res = convertHexString(s);
             for (int i = 0; i < s.Length; i++) {
@@ -63,6 +68,7 @@ namespace Cryptanalysis.Core {
             }
             return key;
         }
+        internal static byte[] GetRndInput(int len) => GetRndKey(len);
         internal static string GetHyphens(int len) {
             if (len < 1)
                 return "-";
@@ -112,6 +118,41 @@ namespace Cryptanalysis.Core {
             byte[] x = new byte[arr.Length];
             Array.Copy(arr, x, arr.Length);
             return x;
+        }
+        internal static void SetPrinter(List<AChanger> l, IPrinter pr) {
+            foreach (var gate in l)
+                gate.SetPrinter(pr);
+        }
+        internal static byte Xor(byte a, byte b) {
+            if (a == 0 && b == 0)
+                return 0;
+            if (a == 1 && b == 1)
+                return 0;
+            if (a == 1 && b == 0)
+                return 1;
+            if (a == 0 && b == 1)
+                return 1;
+            throw new ArgumentException("At least one of the arguments is not zero or one!");
+        }
+        internal static byte[] XORs(byte[] arr1, byte[] arr2) {
+            if (arr1 == null)
+                throw new ArgumentNullException(nameof(arr1));
+            if (arr2 == null)
+                throw new ArgumentNullException(nameof(arr2));
+            if (arr1.Length != arr2.Length)
+                throw new ArgumentException("Arrays are not the same length!");
+
+            var arr = new byte[arr1.Length];
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] = Xor(arr1[i], arr2[i]);
+            return arr;
+        }
+        internal static void PrintKeys(Cipher cipher, IPrinter printer) {
+            var keys = Attacks.GetKeys(cipher);
+            for (int i = 0; i < keys.Count; i++) {
+                printer.Write("key_" + i.ToString() + ": ");
+                printer.WriteLine(keys[i]);
+            }
         }
     }
 }
