@@ -4,14 +4,14 @@
         protected abstract void ApplyInternal(ref byte[] arr);
         protected abstract void ApplyInverseInternal(ref byte[] arr);
         public void Apply(ref byte[] arr) {
-            Print(arr, " in");
+            Print(arr, "." + nameof(Apply) + ".in");
             ApplyInternal(ref arr);
-            Print(arr, " out");
+            Print(arr, "." + nameof(Apply) + ".out");
         }
         public void ApplyInverse(ref byte[] arr) {
-            Print(arr, " in");
+            Print(arr, "." + nameof(ApplyInverse) + ".in");
             ApplyInverseInternal(ref arr);
-            Print(arr, " out");
+            Print(arr, "." + nameof(ApplyInverse) + ".out");
         }
         public void SetPrinter(IPrinter printer)
             => this.printer = printer;
