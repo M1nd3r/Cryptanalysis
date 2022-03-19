@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.F.Core {
     class Cipher {
-        private IList<AChanger> changers;
-        private Flow flow;
+        private readonly IList<AChanger> changers;
+        private readonly Flow flow;
         public Cipher(IList<AChanger> flowChangers) {
             this.flow = new Flow(null);
             changers = flowChangers;
@@ -20,11 +20,6 @@ namespace Cryptanalysis.F.Core {
             for (int i = changers.Count - 1; i >= 0; i--)
                 flow.ApplyInverse(changers[i]);
             return flow.GetDeepCopy();
-        }
-        private byte[] CreateCopy(byte[] arr) {
-            byte[] x = new byte[arr.Length];
-            Array.Copy(arr, x, arr.Length);
-            return x;
         }
     }
 }

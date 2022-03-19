@@ -4,7 +4,7 @@ using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.F.Common {
     class Sbox4 : AChanger {
-        private (int source, int target)[] table;
+        private readonly (int source, int target)[] table;
         public Sbox4((int source, int target)[] table) {
             this.table = table;
         }

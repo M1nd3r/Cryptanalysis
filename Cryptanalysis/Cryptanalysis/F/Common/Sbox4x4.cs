@@ -3,7 +3,7 @@ using static Cryptanalysis.F.Core.Verifiers;
 
 namespace Cryptanalysis.F.Common {
     class Sbox4x4 : AChanger {
-        Sbox4 sbox;
+        private readonly Sbox4 sbox;
         public Sbox4x4(Sbox4 sbox) {
             this.sbox = sbox;
         }

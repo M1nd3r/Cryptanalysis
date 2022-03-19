@@ -95,18 +95,23 @@ namespace Cryptanalysis.Core {
                 increment = 1;
             for (int i = binaryArr.Length - 1; i >= 0; i--) {
                 if (binaryArr[i] == 1)
-                    r = r + increment;
+                    r += increment;
                 increment *= 2;
             }
             return r;
         }
-        public static int[] ParseParmutationTable(string s, char separator = ',') {
+        internal static int[] ParseParmutationTable(string s, char separator = ',') {
             //TODO - missing validity check
             var nums = s.Split(separator);
             var table = new int[nums.Length];
             for (int i = 0; i < nums.Length; i++)
                 table[i] = int.Parse(nums[i]);
             return table;
+        }
+        internal static byte[] CreateCopy(byte[] arr) {
+            byte[] x = new byte[arr.Length];
+            Array.Copy(arr, x, arr.Length);
+            return x;
         }
     }
 }
