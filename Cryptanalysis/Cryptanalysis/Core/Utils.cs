@@ -6,21 +6,54 @@ using Cryptanalysis.F.Experiments;
 using static Cryptanalysis.Core.Constants;
 
 namespace Cryptanalysis.Core {
+
     internal static class Utils {
-        internal static (int source, int target)[] Invert(this (int source, int target)[] table) {
-            (int source, int target)[] r = new (int, int)[table.Length];
-            for (int i = 0; i < table.Length; i++)
-                r[i] = (table[i].target, table[i].source);
+        internal static Random RAND = new();
+
+        internal static int[] convertHexString(string s) {
+            var r = new int[s.Length];
+            for (int i = 0; i < s.Length; i++) {
+                r[i] = HexToByte(s[i]);
+            }
             return r;
         }
-        internal static bool IsBin(byte val)
-            => val is BYTE_ZERO or BYTE_ONE;
-        internal static bool IsBin(byte val1, byte val2)
-            => (val1 == BYTE_ZERO || val1 == BYTE_ONE)
-            && (val2 == BYTE_ZERO || val2 == BYTE_ONE);
-        internal static bool IsUndefined(byte val)
-            => val == BYTE_UNDEFINED;
-        internal static bool IsBinOrUndefined(byte val) => IsBin(val) || IsUndefined(val);
+
+        internal static byte[] ConvertToBinary(int a, int binLength) {
+            var r = new byte[binLength];
+            var s = Convert.ToString(a, 2);
+            if (s.Length > binLength)
+                throw new ArgumentException("The binary representation of input int32 is longer than given binLength");
+            for (int i = 0; i < binLength; i++)
+                r[i] = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+                r[i + r.Length - s.Length] = Convert.ToByte(s[i].ToString());
+            return r;
+        }
+
+        internal static byte[] ConvertToByteArr(string str) {
+            var r = new byte[str.Length];
+            for (int i = 0; i < str.Length; i++)
+                r[i] = Convert.ToByte(str[i].ToString());
+            return r;
+        }
+
+        internal static int ConvertToInt(byte[] binaryArr) {
+            int
+                r = 0,
+                increment = 1;
+            for (int i = binaryArr.Length - 1; i >= 0; i--) {
+                if (binaryArr[i] == 1)
+                    r += increment;
+                increment *= 2;
+            }
+            return r;
+        }
+
+        internal static byte[] CreateCopy(byte[] arr) {
+            byte[] x = new byte[arr.Length];
+            Array.Copy(arr, x, arr.Length);
+            return x;
+        }
 
         internal static (int, int)[] CreateTransitionTableSbox4(string s) {
             if (s.Length != 16)
@@ -32,13 +65,27 @@ namespace Cryptanalysis.Core {
             }
             return table;
         }
-        internal static int[] convertHexString(string s) {
-            var r = new int[s.Length];
-            for (int i = 0; i < s.Length; i++) {
-                r[i] = HexToByte(s[i]);
+
+        internal static string GetHyphens(int len) {
+            if (len < 1)
+                return "-";
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < len; i++) {
+                sb.Append('-');
             }
-            return r;
+            return sb.ToString();
         }
+
+        internal static byte[] GetRndInput(int len) => GetRndKey(len);
+
+        internal static byte[] GetRndKey(int len) {
+            var key = new byte[len];
+            for (int i = 0; i < len; i++) {
+                key[i] = (byte)RAND.Next(0, 2);
+            }
+            return key;
+        }
+
         internal static byte HexToByte(char hex) {
             return char.ToUpper(hex) switch {
                 HEX_0 => 0,
@@ -60,52 +107,26 @@ namespace Cryptanalysis.Core {
                 _ => 255,
             };
         }
-        internal static Random RAND = new();
-        internal static byte[] GetRndKey(int len) {
-            var key = new byte[len];
-            for (int i = 0; i < len; i++) {
-                key[i] = (byte)RAND.Next(0, 2);
-            }
-            return key;
-        }
-        internal static byte[] GetRndInput(int len) => GetRndKey(len);
-        internal static string GetHyphens(int len) {
-            if (len < 1)
-                return "-";
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < len; i++) {
-                sb.Append('-');
-            }
-            return sb.ToString();
-        }
-        internal static byte[] ConvertToByteArr(string str) {
-            var r = new byte[str.Length];
-            for (int i = 0; i < str.Length; i++)
-                r[i] = Convert.ToByte(str[i].ToString());
+
+        internal static (int source, int target)[] Invert(this (int source, int target)[] table) {
+            (int source, int target)[] r = new (int, int)[table.Length];
+            for (int i = 0; i < table.Length; i++)
+                r[i] = (table[i].target, table[i].source);
             return r;
         }
-        internal static byte[] ConvertToBinary(int a, int binLength) {
-            var r = new byte[binLength];
-            var s = Convert.ToString(a, 2);
-            if (s.Length > binLength)
-                throw new ArgumentException("The binary representation of input int32 is longer than given binLength");
-            for (int i = 0; i < binLength; i++)
-                r[i] = 0;
-            for (int i = s.Length - 1; i >= 0; i--)
-                r[i + r.Length - s.Length] = Convert.ToByte(s[i].ToString());
-            return r;
-        }
-        internal static int ConvertToInt(byte[] binaryArr) {
-            int
-                r = 0,
-                increment = 1;
-            for (int i = binaryArr.Length - 1; i >= 0; i--) {
-                if (binaryArr[i] == 1)
-                    r += increment;
-                increment *= 2;
-            }
-            return r;
-        }
+
+        internal static bool IsBin(byte val)
+            => val is BYTE_ZERO or BYTE_ONE;
+
+        internal static bool IsBin(byte val1, byte val2)
+            => (val1 == BYTE_ZERO || val1 == BYTE_ONE)
+            && (val2 == BYTE_ZERO || val2 == BYTE_ONE);
+
+        internal static bool IsBinOrUndefined(byte val) => IsBin(val) || IsUndefined(val);
+
+        internal static bool IsUndefined(byte val)
+                    => val == BYTE_UNDEFINED;
+
         internal static int[] ParseParmutationTable(string s, char separator = ',') {
             //TODO - missing validity check
             var nums = s.Split(separator);
@@ -114,15 +135,20 @@ namespace Cryptanalysis.Core {
                 table[i] = int.Parse(nums[i]);
             return table;
         }
-        internal static byte[] CreateCopy(byte[] arr) {
-            byte[] x = new byte[arr.Length];
-            Array.Copy(arr, x, arr.Length);
-            return x;
+
+        internal static void PrintKeys(Cipher cipher, IPrinter printer) {
+            var keys = Attacks.GetKeys(cipher);
+            for (int i = 0; i < keys.Count; i++) {
+                printer.Write("key_" + i.ToString() + ": ");
+                printer.WriteLine(keys[i]);
+            }
         }
+
         internal static void SetPrinter(List<AChanger> l, IPrinter pr) {
             foreach (var gate in l)
                 gate.SetPrinter(pr);
         }
+
         internal static byte Xor(byte a, byte b) {
             if (a == 0 && b == 0)
                 return 0;
@@ -134,6 +160,7 @@ namespace Cryptanalysis.Core {
                 return 1;
             throw new ArgumentException("At least one of the arguments is not zero or one!");
         }
+
         internal static byte[] XORs(byte[] arr1, byte[] arr2) {
             if (arr1 == null)
                 throw new ArgumentNullException(nameof(arr1));
@@ -146,13 +173,6 @@ namespace Cryptanalysis.Core {
             for (int i = 0; i < arr.Length; i++)
                 arr[i] = Xor(arr1[i], arr2[i]);
             return arr;
-        }
-        internal static void PrintKeys(Cipher cipher, IPrinter printer) {
-            var keys = Attacks.GetKeys(cipher);
-            for (int i = 0; i < keys.Count; i++) {
-                printer.Write("key_" + i.ToString() + ": ");
-                printer.WriteLine(keys[i]);
-            }
         }
     }
 }

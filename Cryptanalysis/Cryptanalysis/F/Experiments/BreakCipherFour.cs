@@ -3,7 +3,9 @@ using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.F.Experiments {
+
     internal static partial class Attacks {
+
         public static void BreakCipherFour() {
             var consolePrint = new ConsolePrinter();
             var printerUsed = consolePrint;

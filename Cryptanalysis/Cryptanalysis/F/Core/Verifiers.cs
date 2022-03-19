@@ -1,16 +1,7 @@
 ﻿namespace Cryptanalysis.F.Core {
-    static class Verifiers {
-        internal static void CheckAreEqual(int a, int b) {
-            if (a != b)
-                throw new CheckException("Values are not equal");
-        }
-        internal static void CheckIsZeroOrOne(byte a) {
-            if (a == 0)
-                return;
-            if (a == 1)
-                return;
-            throw new CheckException("Given byte in not zero or one. Its value is " + a.ToString());
-        }
+
+    internal static class Verifiers {
+
         internal static bool AreEqual(byte[] a, byte[] b) {
             if (a == null || b == null)
                 return false;
@@ -21,6 +12,19 @@
                     return false;
             }
             return true;
+        }
+
+        internal static void CheckAreEqual(int a, int b) {
+            if (a != b)
+                throw new CheckException("Values are not equal");
+        }
+
+        internal static void CheckIsZeroOrOne(byte a) {
+            if (a == 0)
+                return;
+            if (a == 1)
+                return;
+            throw new CheckException("Given byte in not zero or one. Its value is " + a.ToString());
         }
     }
 }

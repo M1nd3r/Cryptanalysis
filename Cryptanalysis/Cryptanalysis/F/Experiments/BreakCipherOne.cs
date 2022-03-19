@@ -6,7 +6,9 @@ using static Cryptanalysis.Core.Utils;
 using static Cryptanalysis.F.Core.Verifiers;
 
 namespace Cryptanalysis.F.Experiments {
+
     internal static partial class Attacks {
+
         public static void BreakCipherOne() {
             var mainPrinter = new ConsolePrinter();
             var verbosePrinter = new ConsolePrinter();
@@ -69,7 +71,6 @@ namespace Cryptanalysis.F.Experiments {
             }
             if (candK1.Count != 1)
                 verbosePrinter.WriteLine("Failure! No key candidate was found!");
-
             else {
                 var key1 = candK1[0];
                 byte[] key0_part = XORs(output1, key1);

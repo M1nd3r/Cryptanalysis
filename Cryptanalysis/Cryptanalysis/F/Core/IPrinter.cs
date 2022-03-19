@@ -1,8 +1,13 @@
 ﻿namespace Cryptanalysis.F.Core {
-    interface IPrinter {
-        void WriteLine(string s);
-        void WriteLine(byte[] arr);
+
+    internal interface IPrinter {
+
         void Write(string s);
+
         void Write(byte[] arr);
+
+        void WriteLine(string s);
+
+        void WriteLine(byte[] arr);
     }
 }

@@ -3,17 +3,10 @@ using Cryptanalysis.F.Common;
 using Cryptanalysis.F.Core;
 using static Cryptanalysis.F.Core.Verifiers;
 
-
 namespace Cryptanalysis.F.Experiments {
+
     internal static partial class Attacks {
 
-        private static bool NotContains(this IList<byte[]> list, byte[] value) {
-            foreach (var item in list) {
-                if (AreEqual(item, value))
-                    return false;
-            }
-            return true;
-        }
         internal static List<byte[]> GetKeys(Cipher cipher) {
             List<AChanger> listRefl =
                 ((List<AChanger>)cipher.GetType()
@@ -27,6 +20,14 @@ namespace Cryptanalysis.F.Experiments {
                 ret.Add(key);
             }
             return ret;
+        }
+
+        private static bool NotContains(this IList<byte[]> list, byte[] value) {
+            foreach (var item in list) {
+                if (AreEqual(item, value))
+                    return false;
+            }
+            return true;
         }
     }
 }

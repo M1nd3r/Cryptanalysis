@@ -4,7 +4,9 @@ using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.Core {
+
     internal static class DefaultCiphers {
+
         internal static Cipher GetCipherFour(IPrinter printer) {
             //Definition of cipher elements
             XORwithKey[] keys = new XORwithKey[6];
@@ -33,6 +35,7 @@ namespace Cryptanalysis.Core {
             SetPrinter(l, printer);
             return new Cipher(l);
         }
+
         internal static Cipher GetCipherOne(IPrinter printer) {
             XORwithKey
                 key0 = new(GetRndKey(4)),

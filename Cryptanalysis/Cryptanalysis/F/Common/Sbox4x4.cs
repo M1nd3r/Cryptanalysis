@@ -2,11 +2,14 @@
 using static Cryptanalysis.F.Core.Verifiers;
 
 namespace Cryptanalysis.F.Common {
-    class Sbox4x4 : AChanger {
+
+    internal class Sbox4x4 : AChanger {
         private readonly Sbox4 sbox;
+
         public Sbox4x4(Sbox4 sbox) {
             this.sbox = sbox;
         }
+
         protected override void ApplyInternal(ref byte[] arr) {
             CheckAreEqual(16, arr.Length);
             for (int i = 0; i < 4; i++) {
@@ -17,6 +20,7 @@ namespace Cryptanalysis.F.Common {
                 }
             }
         }
+
         protected override void ApplyInverseInternal(ref byte[] arr) {
             CheckAreEqual(16, arr.Length);
             for (int i = 0; i < 4; i++) {

@@ -3,11 +3,14 @@ using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.F.Common {
-    class Sbox4 : AChanger {
+
+    internal class Sbox4 : AChanger {
         private readonly (int source, int target)[] table;
+
         public Sbox4((int source, int target)[] table) {
             this.table = table;
         }
+
         protected override void ApplyInternal(ref byte[] arr) {
             int test = ConvertToInt(arr);
             foreach (var (source, target) in table) {

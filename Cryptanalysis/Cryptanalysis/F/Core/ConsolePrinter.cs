@@ -1,12 +1,9 @@
 ﻿using System;
 
 namespace Cryptanalysis.F.Core {
-    class ConsolePrinter : IPrinter {
-        public void WriteLine(byte[] arr) {
-            Write(arr);
-            WriteLine("");
-        }
-        public void WriteLine(string s) => Console.WriteLine(s);
+
+    internal class ConsolePrinter : IPrinter {
+
         public void Write(string s) => Console.Write(s);
 
         public void Write(byte[] arr) {
@@ -17,5 +14,12 @@ namespace Cryptanalysis.F.Core {
             for (int i = 0; i < arr.Length; i++)
                 Console.Write(arr[i]);
         }
+
+        public void WriteLine(byte[] arr) {
+            Write(arr);
+            WriteLine("");
+        }
+
+        public void WriteLine(string s) => Console.WriteLine(s);
     }
 }
