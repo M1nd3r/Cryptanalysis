@@ -9,13 +9,14 @@ namespace Cryptanalysis.Core {
 
         internal static Cipher GetCipherFour(IPrinter printer) {
             //Definition of cipher elements
-            XORwithKey[] keys = new XORwithKey[6];
-            keys[0] = new XORwithKey(ConvertToBinary(23442, 16));
-            keys[1] = new XORwithKey(ConvertToBinary(1611, 16));
-            keys[2] = new XORwithKey(ConvertToBinary(7683, 16));
-            keys[3] = new XORwithKey(ConvertToBinary(42335, 16));
-            keys[4] = new XORwithKey(ConvertToBinary(60605, 16));
-            keys[5] = new XORwithKey(ConvertToBinary(31909, 16));
+            XORwithKey[] keys = new XORwithKey[] {
+                new (ConvertToBinary(23442, 16)),
+                new (ConvertToBinary(1611, 16)),
+                new (ConvertToBinary(7683, 16)),
+                new (ConvertToBinary(42335, 16)),
+                new (ConvertToBinary(60605, 16)),
+                new (ConvertToBinary(31909, 16)),
+            };
 
             var perm = new Permutation(ParseParmutationTable("0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15"));
             var sbox = DefaultFlowChangers.GetSbox4_1();
@@ -41,10 +42,28 @@ namespace Cryptanalysis.Core {
                 key0 = new(GetRndKey(4)),
                 key1 = new(GetRndKey(4));
             var sbox = DefaultFlowChangers.GetSbox4_1();
-            List<AChanger> l = new List<AChanger> {
+            var l = new List<AChanger> {
                 key0,
                 sbox,
                 key1
+            };
+            SetPrinter(l, printer);
+            return new Cipher(l);
+        }
+
+        internal static Cipher GetCipherTwo(IPrinter printer) {
+            var keys = new XORwithKey[] {
+                new(GetRndKey(4)),
+                new(GetRndKey(4)),
+                new(GetRndKey(4))
+            };
+            var sbox = DefaultFlowChangers.GetSbox4_1();
+            var l = new List<AChanger> {
+                keys[0],
+                sbox,
+                keys[1],
+                sbox,
+                keys[2]
             };
             SetPrinter(l, printer);
             return new Cipher(l);
