@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cryptanalysis.Core.Common {
+﻿namespace Cryptanalysis.Core.Common {
     class DummyGate : Gate {
         private int length;
         public DummyGate(string name, int length) : base(name) {

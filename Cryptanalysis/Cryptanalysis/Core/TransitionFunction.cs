@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Cryptanalysis.Core.Constants;
 
 namespace Cryptanalysis.Core {
@@ -17,12 +14,12 @@ namespace Cryptanalysis.Core {
             outputs = new List<byte[]>();
             this.defaultOutputsCount = defaultOutputsCount;
         }
-        public void Perform(ref List<InSlot> input, ref List<OutSlot> outputs) {
+        public void Perform<T1, T2>(ref List<T1> input, ref List<T2> outputs) where T1 : Slot where T2 : Slot {
             var inp = ConvertToByte(input);
             var output = GetOutput(inp);
             SetOutputs(ref outputs, output);
         }
-        private static byte[] ConvertToByte(List<InSlot> input) {
+        private static byte[] ConvertToByte<T>(List<T> input) where T : Slot {
             var r = new byte[input.Count];
             for (int i = 0; i < input.Count; i++)
                 r[i] = input[i].Get;
@@ -50,7 +47,7 @@ namespace Cryptanalysis.Core {
                 arrOut[i] = BYTE_UNDEFINED;
             return arrOut;
         }
-        private static void SetOutputs(ref List<OutSlot> outputs, byte[] valueToSet) {
+        private static void SetOutputs<T>(ref List<T> outputs, byte[] valueToSet) where T : Slot {
             if (outputs.Count != valueToSet.Length)
                 throw new Exception("Number of output slots of the gate and of number of values to set are not the same");
             for (int i = 0; i < outputs.Count; i++)

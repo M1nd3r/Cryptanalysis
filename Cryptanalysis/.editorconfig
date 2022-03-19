@@ -127,11 +127,13 @@ dotnet_diagnostic.CA1001.severity=suggestion
 dotnet_diagnostic.CA1065.severity=warning
 dotnet_diagnostic.IDE0035.severity=suggestion
 dotnet_diagnostic.IDE0041.severity=suggestion
-dotnet_diagnostic.IDE0055.severity=error
+dotnet_diagnostic.IDE0055.severity=warning
 csharp_style_prefer_pattern_matching=true:suggestion
 dotnet_diagnostic.IDE0007.severity=silent
 dotnet_diagnostic.IDE0016.severity=suggestion
 dotnet_diagnostic.IDE0072.severity=suggestion
+dotnet_diagnostic.IDE0005.severity=warning
+dotnet_diagnostic.IDE0005_gen.severity=warning
 ###############################
 # VB Coding Conventions       #
 ###############################

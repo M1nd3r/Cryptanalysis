@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
 
 using Cryptanalysis.Core;
 using Cryptanalysis.Core.Common;
@@ -22,7 +17,7 @@ namespace Cryptanalysis.Ciphers {
             }
         }
         private void SetKeysSample() {
-            keys_byte = new byte[6][];
+            SetKeysRandomly();
             keys_byte[0] = ConvertToBinary(23442, 16);
             keys_byte[1] = ConvertToBinary(1611, 16);
             keys_byte[2] = ConvertToBinary(7683, 16);

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cryptanalysis.Core.Common {
     abstract class ASbox : Gate {
         private int length;
-        private (int source, int target)[] table;
+        protected (int source, int target)[] table;
         private TransitionFunction func;
         public ASbox(string name, (int source, int target)[] table) : base(name) {
             SetLength(table);
@@ -27,7 +23,7 @@ namespace Cryptanalysis.Core.Common {
             length = -1; //Fail value
             return false;
         }
-        private TransitionFunction CreateTransitionFunction() {
+        protected TransitionFunction CreateTransitionFunction() {
             var r = new TransitionFunction(length);
             for (int i = 0; i < table.Length; i++) {
                 r.AddInputOutputPair(

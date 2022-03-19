@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cryptanalysis.Core.Common {
+﻿namespace Cryptanalysis.Core.Common {
     class Permutation : Model {
         private (int source, int target)[] table;
         public Permutation(string name, (int source, int target)[] table) : base(name) {
@@ -13,7 +7,7 @@ namespace Cryptanalysis.Core.Common {
             this.table = table;
             SetConnections();
         }
-        public Permutation(Permutation perm) : this(perm.Name, perm.table) {
+        private Permutation(Permutation perm) : this(perm.Name, perm.table) {
 
         }
         public static (int source, int target)[] ParseParmutationTable(string s, char separator = ',') {
