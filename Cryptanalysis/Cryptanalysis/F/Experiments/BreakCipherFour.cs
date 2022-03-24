@@ -32,13 +32,13 @@ namespace Cryptanalysis.F.Experiments {
             var sboxRow = new Sbox4x4(sbox);
 
             var possibleKeyParts = GenerateAllPossibleKeys(4);
-            var possibleKeys = fillZerosBeforeAndAfter(8, 4, possibleKeyParts);
+            var possibleKeys = FillZerosBeforeAndAfter(8, 4, possibleKeyParts);
             int[] score = new int[possibleKeys.Count];
 
             var allCiphertetxs = new List<(byte[] c1, byte[] c2)>();
 
             mainPrinter.WriteLine("Start of Filtering");
-            initializeFiltering();
+            InitializeFiltering();
             foreach (var (a, b) in allDiffs) {
                 var c1 = cipherFour.Encode(a);
                 var c2 = cipherFour.Encode(b);
@@ -70,7 +70,7 @@ namespace Cryptanalysis.F.Experiments {
             mainPrinter.Write("Expected key part result is: ");
             mainPrinter.WriteLine(possibleKeyParts[index]);
             var realKeys = GetKeys(cipherFour);
-            if (isThirdPartTheSame(realKeys[5], possibleKeys[index]))
+            if (IsThirdPartTheSame(realKeys[5], possibleKeys[index]))
                 mainPrinter.WriteLine("It is correct!!");
             else {
                 mainPrinter.WriteLine("THAT IS NOT CORRECT!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -78,7 +78,7 @@ namespace Cryptanalysis.F.Experiments {
             }
         }
 
-        private static IList<byte[]> fillZerosBeforeAndAfter(int before, int after, IList<byte[]> inputList) {
+        private static IList<byte[]> FillZerosBeforeAndAfter(int before, int after, IList<byte[]> inputList) {
             var list = new List<byte[]>();
             int added = before + after;
             foreach (var arr in inputList) {
@@ -137,14 +137,14 @@ namespace Cryptanalysis.F.Experiments {
             return list;
         }
 
-        private static void initializeFiltering() {
+        private static void InitializeFiltering() {
             filter[0] = ConvertToByteArr("0000000000010000");
             filter[1] = ConvertToByteArr("0000000000100000");
             filter[2] = ConvertToByteArr("0000000010010000");
             filter[3] = ConvertToByteArr("0000000010100000");
         }
 
-        private static bool isThirdPartTheSame(byte[] key1, byte[] key2) {
+        private static bool IsThirdPartTheSame(byte[] key1, byte[] key2) {
             for (int i = 8; i < 12; i++) {
                 if (key1[i] != key2[i])
                     return false;
