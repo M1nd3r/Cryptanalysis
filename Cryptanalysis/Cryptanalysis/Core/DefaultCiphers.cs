@@ -9,14 +9,8 @@ namespace Cryptanalysis.Core {
 
         internal static Cipher GetCipherFour(IPrinter printer) {
             //Definition of cipher elements
-            XORwithKey[] keys = new XORwithKey[] {
-                new (ConvertToBinary(23442, 16)),
-                new (ConvertToBinary(1611, 16)),
-                new (ConvertToBinary(7683, 16)),
-                new (ConvertToBinary(42335, 16)),
-                new (ConvertToBinary(60605, 16)),
-                new (ConvertToBinary(31909, 16)),
-            };
+
+            XORwithKey[] keys = GetRandomKeys();
 
             var perm = new Permutation(ParseParmutationTable("0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15"));
             var sbox = DefaultFlowChangers.GetSbox4_1();
@@ -67,6 +61,25 @@ namespace Cryptanalysis.Core {
             };
             SetPrinter(l, printer);
             return new Cipher(l);
+        }
+
+        private static XORwithKey[] GetDefaultKeys() {
+            XORwithKey[] keys = new XORwithKey[] {
+                new (ConvertToBinary(23442, 16)),
+                new (ConvertToBinary(1611, 16)),
+                new (ConvertToBinary(7683, 16)),
+                new (ConvertToBinary(42335, 16)),
+                new (ConvertToBinary(60605, 16)),
+                new (ConvertToBinary(31909, 16)),
+            };
+            return keys;
+        }
+
+        private static XORwithKey[] GetRandomKeys() {
+            XORwithKey[] keys = new XORwithKey[6];
+            for (int i = 0; i < keys.Length; i++)
+                keys[i] = new(GetRndKey(16));
+            return keys;
         }
     }
 }
