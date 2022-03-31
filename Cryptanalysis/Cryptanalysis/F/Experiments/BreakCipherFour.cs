@@ -10,22 +10,26 @@ using static Cryptanalysis.F.Core.Verifiers;
 namespace Cryptanalysis.F.Experiments {
 
     internal static partial class Attacks {
-        public static int FailCounter;
+        public static int cipherFourFailCounter;
 
-        public static int FailCounter2;
+        public static int cipherFourSuccessCounter;
 
         private static readonly byte[][] filter = new byte[4][];
 
         public static void BreakCipherFour() {
+            int precision = 5000; //Negative number - all pairs, otherwise determines number of pairs
+
             var mainPrinter = new ConsolePrinter();
             var verbosePrinter = new DummyPrinter();
             var cipherFour = GetCipherFour(verbosePrinter);
             PrintKeys(cipherFour, mainPrinter);
 
+            //Hardcoded difference
             string diff = "0000000000100000";
             byte[] diff_byte = ConvertToByteArr("0000000000100000");
 
-            var allDiffs = GenerateKeyPairsWithGivenDifference(diff);
+            //Preparing test pairs, keys, end-of-the-cipher parts
+            var allDiffs = GenerateKeyPairsWithGivenDifference(diff, precision);
 
             var sbox = DefaultFlowChangers.GetSbox4_1();
 
@@ -37,7 +41,8 @@ namespace Cryptanalysis.F.Experiments {
 
             var allCiphertetxs = new List<(byte[] c1, byte[] c2)>();
 
-            mainPrinter.WriteLine("Start of Filtering");
+            //Filtering
+            mainPrinter.WriteLine("Start of Filtering ");
             InitializeFiltering();
             foreach (var (a, b) in allDiffs) {
                 var c1 = cipherFour.Encode(a);
@@ -45,8 +50,18 @@ namespace Cryptanalysis.F.Experiments {
                 if (!Filtering(c1, c2))
                     allCiphertetxs.Add((c1, c2));
             }
-            mainPrinter.WriteLine("Filtering done");
+            //Filtering results print
+            {
+                mainPrinter.WriteLine("Filtering done");
 
+                int
+                    a = allDiffs.Count,
+                    b = allCiphertetxs.Count;
+                mainPrinter.Write("Filtered " + (a - b).ToString() + " out of " + a + " (");
+                mainPrinter.WriteLine(((a - b) * 100 / a).ToString() + " %)");
+                mainPrinter.WriteLine("Remains to test: " + b.ToString() + "\n");
+            }
+            //Trying all keys
             for (int i = 0; i < possibleKeys.Count; i++) {
                 foreach (var (c1, c2) in allCiphertetxs) {
                     var d1 = XORs(possibleKeys[i], c1);
@@ -60,6 +75,8 @@ namespace Cryptanalysis.F.Experiments {
                 mainPrinter.Write(possibleKeyParts[i]);
                 mainPrinter.WriteLine(": " + score[i]);
             }
+
+            //Getting maximal value of the array
             int t = 0, index = 0;
             for (int i = 0; i < score.Length; i++) {
                 if (score[i] > t) {
@@ -67,15 +84,35 @@ namespace Cryptanalysis.F.Experiments {
                     index = i;
                 }
             }
+
+            //Printing result - most probable key part
             mainPrinter.Write("Expected key part result is: ");
             mainPrinter.WriteLine(possibleKeyParts[index]);
+
+            //Comparation with real keys
             var realKeys = GetKeys(cipherFour);
-            if (IsThirdPartTheSame(realKeys[5], possibleKeys[index]))
-                mainPrinter.WriteLine("It is correct!!");
-            else {
-                mainPrinter.WriteLine("THAT IS NOT CORRECT!!!!!!!!!!!!!!!!!!!!!!!!");
-                FailCounter++;
+            if (IsThirdPartTheSame(realKeys[5], possibleKeys[index])) {
+                mainPrinter.WriteLine("Success! Key part correctly guessed.");
+                cipherFourSuccessCounter++;
             }
+            else {
+                mainPrinter.WriteLine("Failed! Key parts are different.");
+                cipherFourFailCounter++;
+            }
+            mainPrinter.WriteLine(GetHyphens(38) + "\n");
+        }
+
+        public static void BreakCipherFourRepeatedly(int numberOfIterations) {
+            cipherFourFailCounter = 0;
+            cipherFourSuccessCounter = 0;
+            for (int i = 0; i < numberOfIterations; i++)
+                BreakCipherFour();
+            IPrinter p = new ConsolePrinter();
+            int hyp = 15;
+            p.WriteLine(GetHyphens(hyp));
+            p.WriteLine("Total succ: " + cipherFourSuccessCounter.ToString());
+            p.WriteLine("Total fail: " + cipherFourFailCounter.ToString());
+            p.WriteLine(GetHyphens(hyp));
         }
 
         private static IList<byte[]> FillZerosBeforeAndAfter(int before, int after, IList<byte[]> inputList) {

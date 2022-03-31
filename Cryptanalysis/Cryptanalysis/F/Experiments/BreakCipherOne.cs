@@ -57,10 +57,6 @@ namespace Cryptanalysis.F.Experiments {
                     if (AreEqual(XORs(val1, val2), diff))
                         candK1Temp.Add(t);
                 }
-                if (candK1Temp.Count == 2)
-                    FailCounter++;
-                else
-                    FailCounter2++;
                 foreach (var item in candK1Temp) {
                     verbosePrinter.Write("key_1 candidate from this round: ");
                     verbosePrinter.WriteLine(item);
