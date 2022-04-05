@@ -28,8 +28,6 @@ namespace Cryptanalysis.F.Core {
             return new Solution(mask, result);
         }
 
-        public object Clone() {
-            return new Solution(mask, result);
-        }
+        public object Clone() => new Solution(mask, result);
     }
 }
