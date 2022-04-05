@@ -6,7 +6,7 @@ namespace Cryptanalysis.F.Core {
     internal class Solver {
 
         public static bool TrySolve(IList<Solution> solutions, out byte[] key) {
-            if (solutions.IsNull())
+            if (solutions == null)
                 throw new ArgumentNullException(nameof(solutions));
             if (solutions.IsEmpty())
                 throw new ArgumentException("List of solutions is empty", nameof(solutions));

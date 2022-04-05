@@ -13,12 +13,10 @@ namespace Cryptanalysis.F.Core {
         }
 
         public static bool IsEmpty<T>(this IList<T> list) {
-            if (list.IsNull())
+            if (list == null)
                 throw new ArgumentNullException(nameof(list));
             return list.Count <= 0;
         }
-
-        public static bool IsNull<T>(this T a) => a == null;
 
         public static T[] SubArray<T>(this T[] array, int offset, int length) {
             T[] result = new T[length];
