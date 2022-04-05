@@ -7,6 +7,9 @@ namespace Cryptanalysis.Core {
 
     internal static class DefaultCiphers {
 
+        internal static Cipher GetCipherA(IPrinter printer)
+            => GetBasicCipher(DefaultFlowChangers.GetSbox4_A(), printer);
+
         internal static Cipher GetCipherFour(IPrinter printer) {
             //Definition of cipher elements
 
@@ -31,19 +34,8 @@ namespace Cryptanalysis.Core {
             return new Cipher(l);
         }
 
-        internal static Cipher GetCipherOne(IPrinter printer) {
-            XORwithKey
-                key0 = new(GetRndKey(4)),
-                key1 = new(GetRndKey(4));
-            var sbox = DefaultFlowChangers.GetSbox4_1();
-            var l = new List<AChanger> {
-                key0,
-                sbox,
-                key1
-            };
-            SetPrinter(l, printer);
-            return new Cipher(l);
-        }
+        internal static Cipher GetCipherOne(IPrinter printer)
+            => GetBasicCipher(DefaultFlowChangers.GetSbox4_1(), printer);
 
         internal static Cipher GetCipherTwo(IPrinter printer) {
             var keys = new XORwithKey[] {
@@ -58,6 +50,19 @@ namespace Cryptanalysis.Core {
                 keys[1],
                 sbox,
                 keys[2]
+            };
+            SetPrinter(l, printer);
+            return new Cipher(l);
+        }
+
+        private static Cipher GetBasicCipher(Sbox4 sbox, IPrinter printer) {
+            XORwithKey
+                key0 = new(GetRndKey(4)),
+                key1 = new(GetRndKey(4));
+            var l = new List<AChanger> {
+                key0,
+                sbox,
+                key1
             };
             SetPrinter(l, printer);
             return new Cipher(l);
