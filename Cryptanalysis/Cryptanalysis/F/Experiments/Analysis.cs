@@ -6,7 +6,7 @@ namespace Cryptanalysis.F.Experiments {
 
     internal static class Analysis {
 
-        internal static IList<MaskProbability> GetSboxMasks(Sbox4 sbox) {
+        internal static List<MaskProbability> GetSboxMasks(Sbox4 sbox) {
             throw new NotImplementedException(); //TODO
         }
 
