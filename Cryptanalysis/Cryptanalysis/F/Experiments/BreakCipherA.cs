@@ -14,7 +14,7 @@ namespace Cryptanalysis.F.Experiments {
             PrintKeys(cipherA, mainPrinter);
             var masks = Analysis.GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
             masks.Sort();
-            byte[] key = null; //Null assigned to supress error when comparing keys
+            byte[] key = null; //Null is assigned to supress error when comparing keys
             var solutions = new List<Solution>();
 
             for (int i = 0; i < totalPlaintexts; i++) {
