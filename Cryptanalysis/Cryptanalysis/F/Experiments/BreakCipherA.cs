@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
@@ -17,9 +18,8 @@ namespace Cryptanalysis.F.Experiments {
             byte[] key = null; //Null is assigned to supress error when comparing keys
             var solutions = new List<Solution>();
 
-            for (int i = 0; i < totalPlaintexts; i++) {
-                //TODO - Get array of chosen plaintexts and resulting ciphertexts
-            }
+            var plaintexts = GetPlaintexts(totalPlaintexts, 4);
+            var ciphertexts = GetCiphertexts(cipherA, in plaintexts);
 
             for (int i = 0; i < masks.Count; i++) {
                 //Solve over given mask / all plaintexts and ciphertext  pairs
@@ -44,6 +44,30 @@ namespace Cryptanalysis.F.Experiments {
                     return false;
             }
             return true;
+        }
+
+        private static byte[][] GetCiphertexts(Cipher c, in byte[][] plaintexts) {
+            var r = new byte[plaintexts.GetLength(0)][]; //TODO test if dim 0 or dim 1
+            for (int i = 0; i < plaintexts.GetLength(0); i++) {
+                byte[] t = new byte[plaintexts[i].Length];
+                Array.Copy(plaintexts[i], t, t.Length);
+                r[i] = c.Encode(t);
+            }
+            return r;
+        }
+
+        private static byte[] GetPlaintext(int length) {
+            var r = new byte[length];
+            for (int i = 0; i < length; i++)
+                r[i] = (byte)RAND.Next(0, 2);
+            return r;
+        }
+
+        private static byte[][] GetPlaintexts(int total, int length) {
+            var r = new byte[total][];
+            for (int i = 0; i < total; i++)
+                r[i] = GetPlaintext(length);
+            return r;
         }
     }
 }

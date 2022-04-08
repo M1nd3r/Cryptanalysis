@@ -1,13 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cryptanalysis.F.Common;
+using Cryptanalysis.F.Core;
+using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.F.Experiments {
 
     internal static class Analysis {
 
         internal static List<MaskProbability> GetSboxMasks(Sbox4 sbox) {
-            throw new NotImplementedException(); //TODO
+            int size = 256; //2^8
+            var masks = new List<byte[]>(size);
+            int[] probability = new int[size];
+            for (int i = 0; i < size; i++) {
+                masks.Add(ConvertToBinary(i, 8));
+            }
+            var r = new List<MaskProbability>(size);
+            throw new NotImplementedException();
+        }
+
+        private static int ComputeProbability(Sbox4 sbox, byte[] mask) {
+            int p = 0;
+            for (int i = 0; i < 16; i++) {
+                var x = ConvertToBinary(i, 4);
+                byte left = Mult(x, mask.SubArray(0, 4));
+                sbox.Apply(ref x);
+                byte right = Mult(x, mask.SubArray(4, 4));
+                if (left == right) {
+                    p++;
+                }
+            }
+            return p;
         }
 
         internal class MaskProbability : IComparable {
