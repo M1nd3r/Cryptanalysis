@@ -24,7 +24,7 @@ namespace Cryptanalysis.F.Experiments {
             public int Probability => probability;
 
             public int CompareTo(object obj) {
-                if (obj is not MaskProbability mp)
+                if (!(obj is MaskProbability mp))
                     throw new ArgumentException("Object is not a " + nameof(MaskProbability), nameof(obj));
                 if (mask.Length < mp.mask.Length)
                     return -1;

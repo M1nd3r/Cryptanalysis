@@ -39,9 +39,9 @@ namespace Cryptanalysis.Core {
 
         internal static Cipher GetCipherTwo(IPrinter printer) {
             var keys = new XORwithKey[] {
-                new(GetRndKey(4)),
-                new(GetRndKey(4)),
-                new(GetRndKey(4))
+                new XORwithKey(GetRndKey(4)),
+                new XORwithKey(GetRndKey(4)),
+                new XORwithKey(GetRndKey(4))
             };
             var sbox = DefaultFlowChangers.GetSbox4_1();
             var l = new List<AChanger> {
@@ -57,8 +57,8 @@ namespace Cryptanalysis.Core {
 
         private static Cipher GetBasicCipher(Sbox4 sbox, IPrinter printer) {
             XORwithKey
-                key0 = new(GetRndKey(4)),
-                key1 = new(GetRndKey(4));
+                key0 = new XORwithKey(GetRndKey(4)),
+                key1 = new XORwithKey(GetRndKey(4));
             var l = new List<AChanger> {
                 key0,
                 sbox,
@@ -70,12 +70,12 @@ namespace Cryptanalysis.Core {
 
         private static XORwithKey[] GetDefaultKeys() {
             XORwithKey[] keys = new XORwithKey[] {
-                new (ConvertToBinary(23442, 16)),
-                new (ConvertToBinary(1611, 16)),
-                new (ConvertToBinary(7683, 16)),
-                new (ConvertToBinary(42335, 16)),
-                new (ConvertToBinary(60605, 16)),
-                new (ConvertToBinary(31909, 16)),
+                new XORwithKey(ConvertToBinary(23442, 16)),
+                new XORwithKey(ConvertToBinary(1611, 16)),
+                new XORwithKey(ConvertToBinary(7683, 16)),
+                new XORwithKey(ConvertToBinary(42335, 16)),
+                new XORwithKey(ConvertToBinary(60605, 16)),
+                new XORwithKey(ConvertToBinary(31909, 16)),
             };
             return keys;
         }
@@ -83,7 +83,7 @@ namespace Cryptanalysis.Core {
         private static XORwithKey[] GetRandomKeys() {
             XORwithKey[] keys = new XORwithKey[6];
             for (int i = 0; i < keys.Length; i++)
-                keys[i] = new(GetRndKey(16));
+                keys[i] = new XORwithKey(GetRndKey(16));
             return keys;
         }
     }

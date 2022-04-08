@@ -8,7 +8,7 @@ using static Cryptanalysis.Core.Constants;
 namespace Cryptanalysis.Core {
 
     internal static class Utils {
-        internal static Random RAND = new();
+        internal static Random RAND = new Random();
 
         internal static int[] convertHexString(string s) {
             var r = new int[s.Length];
@@ -116,7 +116,7 @@ namespace Cryptanalysis.Core {
         }
 
         internal static bool IsBin(byte val)
-            => val is BYTE_ZERO or BYTE_ONE;
+            => val is BYTE_ZERO || val is BYTE_ONE;
 
         internal static bool IsBin(byte val1, byte val2)
             => (val1 == BYTE_ZERO || val1 == BYTE_ONE)
