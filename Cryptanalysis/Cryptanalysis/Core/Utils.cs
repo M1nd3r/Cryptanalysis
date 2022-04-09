@@ -10,6 +10,15 @@ namespace Cryptanalysis.Core {
     internal static class Utils {
         internal static Random RAND = new Random();
 
+        internal static byte And(byte a, byte b) {
+            if (a == 1 && b == 1)
+                return 1;
+            return 0;
+        }
+
+        internal static byte[] ANDs(byte[] arr1, byte[] arr2)
+            => OperationOnByteArrs(arr1, arr2, And);
+
         internal static int[] convertHexString(string s) {
             var r = new int[s.Length];
             for (int i = 0; i < s.Length; i++) {
@@ -127,6 +136,28 @@ namespace Cryptanalysis.Core {
         internal static bool IsUndefined(byte val)
                     => val == BYTE_UNDEFINED;
 
+        internal static byte Mult(byte[] arr1, byte[] arr2) {
+            var x = ANDs(arr1, arr2);
+            byte r = 0;
+            foreach (var b in x)
+                r = Xor(r, b);
+            return r;
+        }
+
+        internal static byte[] OperationOnByteArrs(byte[] arr1, byte[] arr2, Func<byte, byte, byte> byteOperation) {
+            if (arr1 == null)
+                throw new ArgumentNullException(nameof(arr1));
+            if (arr2 == null)
+                throw new ArgumentNullException(nameof(arr2));
+            if (arr1.Length != arr2.Length)
+                throw new ArgumentException("Arrays are not the same length!");
+
+            var arr = new byte[arr1.Length];
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] = byteOperation(arr1[i], arr2[i]);
+            return arr;
+        }
+
         internal static int[] ParseParmutationTable(string s, char separator = ',') {
             //TODO - missing validity check
             var nums = s.Split(separator);
@@ -161,18 +192,7 @@ namespace Cryptanalysis.Core {
             throw new ArgumentException("At least one of the arguments is not zero or one!");
         }
 
-        internal static byte[] XORs(byte[] arr1, byte[] arr2) {
-            if (arr1 == null)
-                throw new ArgumentNullException(nameof(arr1));
-            if (arr2 == null)
-                throw new ArgumentNullException(nameof(arr2));
-            if (arr1.Length != arr2.Length)
-                throw new ArgumentException("Arrays are not the same length!");
-
-            var arr = new byte[arr1.Length];
-            for (int i = 0; i < arr.Length; i++)
-                arr[i] = Xor(arr1[i], arr2[i]);
-            return arr;
-        }
+        internal static byte[] XORs(byte[] arr1, byte[] arr2)
+            => OperationOnByteArrs(arr1, arr2, Xor);
     }
 }

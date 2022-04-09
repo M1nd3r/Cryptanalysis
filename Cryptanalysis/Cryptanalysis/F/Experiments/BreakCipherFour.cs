@@ -29,7 +29,7 @@ namespace Cryptanalysis.F.Experiments {
             byte[] diff_byte = ConvertToByteArr("0000000000100000");
 
             //Preparing test pairs, keys, end-of-the-cipher parts
-            var allDiffs = GenerateKeyPairsWithGivenDifference(diff, precision);
+            var allDiffs = GeneratePlaintextPairsWithGivenDifference(diff, precision);
 
             var sbox = DefaultFlowChangers.GetSbox4_1();
 
@@ -154,7 +154,7 @@ namespace Cryptanalysis.F.Experiments {
         /// <param name="diff">Desired difference of bit strings.</param>
         /// <param name="total">Total number of pairs. If negative, all possible pairs will be generated</param>
         /// <returns>List of all possible pairs with given difference</returns>
-        private static IList<(byte[] a, byte[] b)> GenerateKeyPairsWithGivenDifference(string diff, int total = 0) {
+        private static IList<(byte[] a, byte[] b)> GeneratePlaintextPairsWithGivenDifference(string diff, int total = 0) {
             if (diff == null)
                 throw new ArgumentNullException(nameof(diff));
 
