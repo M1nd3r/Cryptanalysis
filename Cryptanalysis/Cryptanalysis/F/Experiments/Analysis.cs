@@ -10,7 +10,7 @@ namespace Cryptanalysis.F.Experiments {
             throw new NotImplementedException(); //TODO
         }
 
-        internal class MaskProbability : IComparable {
+        internal class MaskProbability {
             private readonly byte[] mask;
             private readonly int probability;
 
@@ -22,16 +22,6 @@ namespace Cryptanalysis.F.Experiments {
             public int Length => mask.Length;
             public byte[] Mask => mask;
             public int Probability => probability;
-
-            public int CompareTo(object obj) {
-                if (!(obj is MaskProbability mp))
-                    throw new ArgumentException("Object is not a " + nameof(MaskProbability), nameof(obj));
-                if (mask.Length < mp.mask.Length)
-                    return -1;
-                if (mask.Length > mp.mask.Length)
-                    return 1;
-                return probability.CompareTo(mp.probability);
-            }
         }
     }
 }
