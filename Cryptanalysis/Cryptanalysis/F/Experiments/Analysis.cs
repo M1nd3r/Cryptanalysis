@@ -10,13 +10,13 @@ namespace Cryptanalysis.F.Experiments {
 
         internal static List<MaskProbability> GetSboxMasks(Sbox4 sbox) {
             int size = 256; //2^8
-            var masks = new List<byte[]>(size);
-            int[] probability = new int[size];
-            for (int i = 0; i < size; i++) {
-                masks.Add(ConvertToBinary(i, 8));
-            }
             var r = new List<MaskProbability>(size);
-            throw new NotImplementedException();
+            for (int i = 0; i < size; i++) {
+                byte[] mask = (ConvertToBinary(i, 8));
+                int probability = ComputeProbability(sbox, mask);
+                r.Add(new MaskProbability(mask, probability));
+            }
+            return r;
         }
 
         private static int ComputeProbability(Sbox4 sbox, byte[] mask) {

@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
+using static Cryptanalysis.F.Experiments.Analysis;
 
 namespace Cryptanalysis.F.Experiments {
 
     internal static partial class Attacks {
+        private class ProbabilityComparatorA : IComparer<MaskProbability> {
+            public int Compare([AllowNull] MaskProbability x, [AllowNull] MaskProbability y) {
+                int
+                    X = (x.Probability - 8) * (x.Probability - 8),
+                    Y = (y.Probability - 8) * (y.Probability - 8);
+                if (X < Y)
+                    return -1;
+                if (X > Y)
+                    return 1;
+                return 0;
+            }
+        }
 
         public static void BreakCipherA(int totalPlaintexts) {
             var mainPrinter = new ConsolePrinter();
@@ -14,7 +28,7 @@ namespace Cryptanalysis.F.Experiments {
             var cipherA = GetCipherA(verbosePrinter);
             PrintKeys(cipherA, mainPrinter);
             var masks = Analysis.GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
-            masks.Sort();
+            masks.Sort(new ProbabilityComparatorA());
             byte[] key = null; //Null is assigned to supress error when comparing keys
             var solutions = new List<Solution>();
 
@@ -24,7 +38,7 @@ namespace Cryptanalysis.F.Experiments {
             for (int i = 0; i < masks.Count; i++) {
                 //Solve over given mask / all plaintexts and ciphertext  pairs
                 //    -> get resulting bit for the given mask
-                byte result = 2; //TODO - change to meaningful value
+                byte result = GetResultBit(masks[i], plaintexts, ciphertexts); //TODO - change to meaningful value
 
                 solutions.Add(new Solution(masks[i].Mask, result));
                 if (Solver.TrySolve(solutions, out key))
@@ -34,6 +48,16 @@ namespace Cryptanalysis.F.Experiments {
                 mainPrinter.WriteLine("Succes!");
             else
                 mainPrinter.WriteLine("Fail");
+        }
+        private static byte GetResultBit(MaskProbability mp, byte[][] plaintexts,byte[][] ciphertexts) {
+            var mask1 = mp.Mask.SubArray(0, 4);
+            var mask2 = mp.Mask.SubArray(4, 4);
+            byte add = 0;
+            if (mp.Probability < 8)
+                add = 1;
+            //TODO 
+            throw new NotImplementedException();
+
         }
 
         private static bool CompareKeysCipherA(List<byte[]> realKeys, byte[] guess) {
