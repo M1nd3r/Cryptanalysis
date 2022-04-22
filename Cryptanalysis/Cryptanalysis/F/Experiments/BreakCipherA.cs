@@ -9,26 +9,18 @@ using static Cryptanalysis.F.Experiments.Analysis;
 namespace Cryptanalysis.F.Experiments {
 
     internal static partial class Attacks {
-        private class ProbabilityComparatorA : IComparer<MaskProbability> {
-            public int Compare([AllowNull] MaskProbability x, [AllowNull] MaskProbability y) {
-                int
-                    X = (x.Probability - 8) * (x.Probability - 8),
-                    Y = (y.Probability - 8) * (y.Probability - 8);
-                if (X < Y)
-                    return -1;
-                if (X > Y)
-                    return 1;
-                return 0;
-            }
-        }
+
+        public static void BreakCipherA() => BreakCipherA(16);
 
         public static void BreakCipherA(int totalPlaintexts) {
             var mainPrinter = new ConsolePrinter();
-            var verbosePrinter = new ConsolePrinter();
+            var verbosePrinter = new DummyPrinter();
             var cipherA = GetCipherA(verbosePrinter);
             PrintKeys(cipherA, mainPrinter);
+
             var masks = Analysis.GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
             masks.Sort(new ProbabilityComparatorA());
+
             byte[] key = null; //Null is assigned to supress error when comparing keys
             var solutions = new List<Solution>();
 
@@ -36,29 +28,27 @@ namespace Cryptanalysis.F.Experiments {
             var ciphertexts = GetCiphertexts(cipherA, in plaintexts);
 
             for (int i = 0; i < masks.Count; i++) {
-                //Solve over given mask / all plaintexts and ciphertext  pairs
-                //    -> get resulting bit for the given mask
-                byte result = GetResultBit(masks[i], plaintexts, ciphertexts); //TODO - change to meaningful value
-
+                byte result = GetResultBit(masks[i], plaintexts, ciphertexts);
                 solutions.Add(new Solution(masks[i].Mask, result));
                 if (Solver.TrySolve(solutions, out key))
                     break;
             }
-            if (CompareKeysCipherA(GetKeys(cipherA), key))
-                mainPrinter.WriteLine("Succes!");
-            else
+            if (CompareKeysCipherA(GetKeys(cipherA), key)) {
+                mainPrinter.WriteLine("Success!");
+                succ = true;
+            }
+            else {
                 mainPrinter.WriteLine("Fail");
+                succ = false;
+            }
+            PrintRecoveredKeys(mainPrinter, key);
         }
-        private static byte GetResultBit(MaskProbability mp, byte[][] plaintexts,byte[][] ciphertexts) {
-            var mask1 = mp.Mask.SubArray(0, 4);
-            var mask2 = mp.Mask.SubArray(4, 4);
-            byte add = 0;
-            if (mp.Probability < 8)
-                add = 1;
-            //TODO 
-            throw new NotImplementedException();
 
-        }
+        public static void BreakCipherAHundredTimes()
+            => BreakCipherARepeatedly(100);
+
+        public static void BreakCipherARepeatedly(int numberOfIterations)
+            => BreakCipherRepeatedly(numberOfIterations, BreakCipherA);
 
         private static bool CompareKeysCipherA(List<byte[]> realKeys, byte[] guess) {
             for (int i = 0; i < 4; i++) {
@@ -68,6 +58,12 @@ namespace Cryptanalysis.F.Experiments {
                     return false;
             }
             return true;
+        }
+
+        private static byte GetAddValueFromProbability(int prob) {
+            if (prob < 8)
+                return 1;
+            return 0;
         }
 
         private static byte[][] GetCiphertexts(Cipher c, in byte[][] plaintexts) {
@@ -80,18 +76,61 @@ namespace Cryptanalysis.F.Experiments {
             return r;
         }
 
-        private static byte[] GetPlaintext(int length) {
-            var r = new byte[length];
-            for (int i = 0; i < length; i++)
-                r[i] = (byte)RAND.Next(0, 2);
-            return r;
+        private static int GetChangeOfCounter(byte resultOfMultiplication) {
+            if (resultOfMultiplication == 0)
+                return -1;
+            else if (resultOfMultiplication == 1)
+                return +1;
+            throw new ArgumentException("Argument should be 0 or 1", nameof(resultOfMultiplication));
         }
+
+        private static byte[] GetPlaintext(int length, int index)
+            => ConvertToBinary(index, length);
 
         private static byte[][] GetPlaintexts(int total, int length) {
             var r = new byte[total][];
             for (int i = 0; i < total; i++)
-                r[i] = GetPlaintext(length);
+                r[i] = GetPlaintext(length, i);
             return r;
+        }
+
+        private static byte GetResultBit(MaskProbability mp, byte[][] plaintexts, byte[][] ciphertexts) {
+            var mask1 = mp.Mask.SubArray(0, 4);
+            var mask2 = mp.Mask.SubArray(4, 4);
+            int counter = 0;
+
+            for (int i = 0; i < plaintexts.GetLength(0); i++) {
+                var mul1 = Mult(mask1, plaintexts[i]);
+                var mul2 = Mult(mask2, ciphertexts[i]);
+                var x = Xor(mul1, mul2);
+                counter += GetChangeOfCounter(x);
+            }
+
+            byte add = GetAddValueFromProbability(mp.Probability);
+            if (counter > 0)
+                return Xor(1, add);
+            return Xor(0, add);
+        }
+
+        //Heuristically 7 plaintexts is enough
+        private static void PrintRecoveredKeys(IPrinter p, byte[] keys) {
+            p.WriteLine("Discovered keys:");
+            p.WriteLine(keys.SubArray(0, 4));
+            p.WriteLine(keys.SubArray(4, 4));
+        }
+
+        private class ProbabilityComparatorA : IComparer<MaskProbability> {
+
+            public int Compare([AllowNull] MaskProbability x, [AllowNull] MaskProbability y) {
+                int
+                    X = (x.Probability - 8) * (x.Probability - 8),
+                    Y = (y.Probability - 8) * (y.Probability - 8);
+                if (X < Y)
+                    return 1;
+                if (X > Y)
+                    return -1;
+                return 0;
+            }
         }
     }
 }

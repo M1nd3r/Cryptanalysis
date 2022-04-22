@@ -15,6 +15,7 @@ namespace Cryptanalysis.F.Core {
             key = new byte[len];
             if (sol.Count < len)
                 return false;
+
             for (int i = 0; i < len; i++) {
                 if (!TryGetPivot(sol, i, out int pivot))
                     return false;
@@ -47,11 +48,11 @@ namespace Cryptanalysis.F.Core {
         }
 
         private static void UpdateList(ref IList<Solution> sol, int column, int pivot) {
-            for (int j = 0; j < sol.Count; j++) {
-                if (j == pivot)
+            for (int i = 0; i < sol.Count; i++) {
+                if (i == pivot)
                     continue;
-                if (sol[j].Mask[column] == 1)
-                    sol[j] += sol[pivot];
+                if (sol[i].Mask[column] == 1)
+                    sol[i] += sol[pivot];
             }
         }
     }

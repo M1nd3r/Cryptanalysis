@@ -11,7 +11,7 @@ namespace Cryptanalysis.F.Experiments {
         internal static List<MaskProbability> GetSboxMasks(Sbox4 sbox) {
             int size = 256; //2^8
             var r = new List<MaskProbability>(size);
-            for (int i = 0; i < size; i++) {
+            for (int i = 1; i < size; i++) {
                 byte[] mask = (ConvertToBinary(i, 8));
                 int probability = ComputeProbability(sbox, mask);
                 r.Add(new MaskProbability(mask, probability));

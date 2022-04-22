@@ -10,11 +10,8 @@ using static Cryptanalysis.F.Core.Verifiers;
 namespace Cryptanalysis.F.Experiments {
 
     internal static partial class Attacks {
-        public static int cipherFourFailCounter;
-
-        public static int cipherFourSuccessCounter;
-
         private static readonly byte[][] filter = new byte[4][];
+        private static bool? succ = null;
 
         public static void BreakCipherFour() {
             int precision = 5000; //Negative number - all pairs, otherwise determines number of pairs
@@ -93,27 +90,17 @@ namespace Cryptanalysis.F.Experiments {
             var realKeys = GetKeys(cipherFour);
             if (IsThirdPartTheSame(realKeys[5], possibleKeys[index])) {
                 mainPrinter.WriteLine("Success! Key part correctly guessed.");
-                cipherFourSuccessCounter++;
+                succ = true;
             }
             else {
                 mainPrinter.WriteLine("Failed! Key parts are different.");
-                cipherFourFailCounter++;
+                succ = false;
             }
             mainPrinter.WriteLine(GetHyphens(38) + "\n");
         }
 
-        public static void BreakCipherFourRepeatedly(int numberOfIterations) {
-            cipherFourFailCounter = 0;
-            cipherFourSuccessCounter = 0;
-            for (int i = 0; i < numberOfIterations; i++)
-                BreakCipherFour();
-            IPrinter p = new ConsolePrinter();
-            int hyp = 15;
-            p.WriteLine(GetHyphens(hyp));
-            p.WriteLine("Total succ: " + cipherFourSuccessCounter.ToString());
-            p.WriteLine("Total fail: " + cipherFourFailCounter.ToString());
-            p.WriteLine(GetHyphens(hyp));
-        }
+        public static void BreakCipherFourRepeatedly(int numberOfIterations)
+            => BreakCipherRepeatedly(numberOfIterations, BreakCipherFour);
 
         private static IList<byte[]> FillZerosBeforeAndAfter(int before, int after, IList<byte[]> inputList) {
             var list = new List<byte[]>();
