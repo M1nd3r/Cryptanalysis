@@ -168,7 +168,7 @@ namespace Cryptanalysis.Core {
         }
 
         internal static void PrintKeys(Cipher cipher, IPrinter printer) {
-            var keys = Attacks.GetKeys(cipher);
+            var keys = AttackUtils.GetKeys(cipher);
             for (int i = 0; i < keys.Count; i++) {
                 printer.Write("key_" + i.ToString() + ": ");
                 printer.WriteLine(keys[i]);

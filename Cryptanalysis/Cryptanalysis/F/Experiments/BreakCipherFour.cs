@@ -6,20 +6,20 @@ using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
 using static Cryptanalysis.F.Core.Verifiers;
+using static Cryptanalysis.F.Experiments.AttackUtils;
 
 namespace Cryptanalysis.F.Experiments {
 
-    internal static partial class Attacks {
+    internal class AttackOnCipherFour : Attack {
         private static readonly byte[][] filter = new byte[4][];
-        private static bool? succ = null;
+        public override bool BreakCipher() {
 
-        public static void BreakCipherFour() {
             int precision = 5000; //Negative number - all pairs, otherwise determines number of pairs
 
-            var mainPrinter = new ConsolePrinter();
-            var verbosePrinter = new DummyPrinter();
-            var cipherFour = GetCipherFour(verbosePrinter);
-            PrintKeys(cipherFour, mainPrinter);
+            SetMainPrinter(new ConsolePrinter());
+            SetVerbosePrinter(new DummyPrinter());
+            SetCipher(GetCipherFour(verbosePrinter));
+            PrintKeys();
 
             //Hardcoded difference
             string diff = "0000000000100000";
@@ -42,22 +42,13 @@ namespace Cryptanalysis.F.Experiments {
             mainPrinter.WriteLine("Start of Filtering ");
             InitializeFiltering();
             foreach (var (a, b) in allDiffs) {
-                var c1 = cipherFour.Encode(a);
-                var c2 = cipherFour.Encode(b);
+                var c1 = cipher.Encode(a);
+                var c2 = cipher.Encode(b);
                 if (!Filtering(c1, c2))
                     allCiphertetxs.Add((c1, c2));
             }
-            //Filtering results print
-            {
-                mainPrinter.WriteLine("Filtering done");
+            PrintFilteringResults(mainPrinter, allDiffs.Count, allCiphertetxs.Count);
 
-                int
-                    a = allDiffs.Count,
-                    b = allCiphertetxs.Count;
-                mainPrinter.Write("Filtered " + (a - b).ToString() + " out of " + a + " (");
-                mainPrinter.WriteLine(((a - b) * 100 / a).ToString() + " %)");
-                mainPrinter.WriteLine("Remains to test: " + b.ToString() + "\n");
-            }
             //Trying all keys
             for (int i = 0; i < possibleKeys.Count; i++) {
                 foreach (var (c1, c2) in allCiphertetxs) {
@@ -87,20 +78,28 @@ namespace Cryptanalysis.F.Experiments {
             mainPrinter.WriteLine(possibleKeyParts[index]);
 
             //Comparation with real keys
-            var realKeys = GetKeys(cipherFour);
+            var realKeys = GetKeys(cipher);
             if (IsThirdPartTheSame(realKeys[5], possibleKeys[index])) {
                 mainPrinter.WriteLine("Success! Key part correctly guessed.");
-                succ = true;
+                mainPrinter.WriteLine(GetHyphens(38) + "\n");
+                return true;
             }
-            else {
-                mainPrinter.WriteLine("Failed! Key parts are different.");
-                succ = false;
-            }
-            mainPrinter.WriteLine(GetHyphens(38) + "\n");
-        }
 
-        public static void BreakCipherFourRepeatedly(int numberOfIterations)
-            => BreakCipherRepeatedly(numberOfIterations, BreakCipherFour);
+            mainPrinter.WriteLine("Failed! Key parts are different.");
+            mainPrinter.WriteLine(GetHyphens(38) + "\n");
+            return false;
+
+        }
+        private static void PrintFilteringResults(IPrinter mainPrinter, int allDiffsCount, int allCiphertextsCount) {
+            mainPrinter.WriteLine("Filtering done");
+
+            int
+                a = allDiffsCount,
+                b = allCiphertextsCount;
+            mainPrinter.Write("Filtered " + (a - b).ToString() + " out of " + a + " (");
+            mainPrinter.WriteLine(((a - b) * 100 / a).ToString() + " %)");
+            mainPrinter.WriteLine("Remains to test: " + b.ToString() + "\n");
+        }
 
         private static IList<byte[]> FillZerosBeforeAndAfter(int before, int after, IList<byte[]> inputList) {
             var list = new List<byte[]>();

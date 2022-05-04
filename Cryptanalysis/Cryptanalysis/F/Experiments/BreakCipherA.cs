@@ -5,50 +5,60 @@ using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
 using static Cryptanalysis.F.Experiments.Analysis;
+using static Cryptanalysis.F.Experiments.AttackUtils;
 
 namespace Cryptanalysis.F.Experiments {
 
-    internal static partial class Attacks {
+    internal class AttackOnCipherA : Attack {
 
-        public static void BreakCipherA() => BreakCipherA(16);
+        public override bool BreakCipher() => BreakCipherA(16);
 
-        public static void BreakCipherA(int totalPlaintexts) {
-            var mainPrinter = new ConsolePrinter();
-            var verbosePrinter = new DummyPrinter();
-            var cipherA = GetCipherA(verbosePrinter);
-            PrintKeys(cipherA, mainPrinter);
-
-            var masks = Analysis.GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
-            masks.Sort(new ProbabilityComparatorA());
-
-            byte[] key = null; //Null is assigned to supress error when comparing keys
-            var solutions = new List<Solution>();
+        public bool BreakCipherA(int totalPlaintexts) {
+            SetMainPrinter(new ConsolePrinter());
+            SetVerbosePrinter(new DummyPrinter());
+            SetCipher(GetCipherA(verbosePrinter));
+            var masks = GetSBoxMasksForCipherA();
 
             var plaintexts = GetPlaintexts(totalPlaintexts, 4);
-            var ciphertexts = GetCiphertexts(cipherA, in plaintexts);
+            var ciphertexts = GetCiphertexts(cipher, in plaintexts);
 
+            PrintKeys();
+
+            var key = IdentifyAndGetKey(plaintexts, ciphertexts, masks);
+            PrintRecoveredKeys(mainPrinter, key);
+            return CompareKeysAndHandleResult(cipher, key, mainPrinter);
+        }
+        private static byte[] IdentifyAndGetKey(byte[][] plaintexts, byte[][] ciphertexts, List<MaskProbability> masks) {
+            var solutions = new List<Solution>();
             for (int i = 0; i < masks.Count; i++) {
                 byte result = GetResultBit(masks[i], plaintexts, ciphertexts);
                 solutions.Add(new Solution(masks[i].Mask, result));
-                if (Solver.TrySolve(solutions, out key))
-                    break;
+                if (Solver.TrySolve(solutions, out byte[] key))
+                    return key;
             }
-            if (CompareKeysCipherA(GetKeys(cipherA), key)) {
-                mainPrinter.WriteLine("Success!");
-                succ = true;
-            }
-            else {
-                mainPrinter.WriteLine("Fail");
-                succ = false;
-            }
-            PrintRecoveredKeys(mainPrinter, key);
+            throw new Exception("Key not found!"); //Should not happen
         }
+        private static List<MaskProbability> GetSBoxMasksForCipherA() {
+            var masks = GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
+            masks.Sort(new ProbabilityComparatorA());
+            return masks;
+        }
+        private static bool CompareKeysAndHandleResult(Cipher cipher, byte[] guess, IPrinter printer) {
+            var succ = CompareKeysCipherA(GetKeys(cipher), guess);
+            printer.WriteLine(GetSuccessOrFailString(succ));
+            return succ;
+        }
+        private static string GetSuccessOrFailString(bool succ) {
+            if (succ)
+                return GetSuccessString();
+            return GetFailString();
+        }
+        private static string GetSuccessString() => "Success!";
+        private static string GetFailString() => "Fail!";
 
-        public static void BreakCipherAHundredTimes()
-            => BreakCipherARepeatedly(100);
+        public void BreakCipherAHundredTimes()
+            => BreakCipherRepeatedly(100);
 
-        public static void BreakCipherARepeatedly(int numberOfIterations)
-            => BreakCipherRepeatedly(numberOfIterations, BreakCipherA);
 
         private static bool CompareKeysCipherA(List<byte[]> realKeys, byte[] guess) {
             for (int i = 0; i < 4; i++) {
