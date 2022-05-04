@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cryptanalysis.Common;
 using Cryptanalysis.Core;
-using Cryptanalysis.F.Common;
-using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
-using static Cryptanalysis.F.Core.Verifiers;
-using static Cryptanalysis.F.Experiments.AttackUtils;
+using static Cryptanalysis.Core.Verifiers;
+using static Cryptanalysis.Experiments.AttackUtils;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
     internal class AttackOnCipherFour : Attack {
         private static readonly byte[][] filter = new byte[4][];
-        public override bool BreakCipher() {
 
+        public override bool BreakCipher() {
             int precision = 5000; //Negative number - all pairs, otherwise determines number of pairs
 
             SetMainPrinter(new ConsolePrinter());
@@ -88,17 +87,6 @@ namespace Cryptanalysis.F.Experiments {
             mainPrinter.WriteLine("Failed! Key parts are different.");
             mainPrinter.WriteLine(GetHyphens(38) + "\n");
             return false;
-
-        }
-        private static void PrintFilteringResults(IPrinter mainPrinter, int allDiffsCount, int allCiphertextsCount) {
-            mainPrinter.WriteLine("Filtering done");
-
-            int
-                a = allDiffsCount,
-                b = allCiphertextsCount;
-            mainPrinter.Write("Filtered " + (a - b).ToString() + " out of " + a + " (");
-            mainPrinter.WriteLine(((a - b) * 100 / a).ToString() + " %)");
-            mainPrinter.WriteLine("Remains to test: " + b.ToString() + "\n");
         }
 
         private static IList<byte[]> FillZerosBeforeAndAfter(int before, int after, IList<byte[]> inputList) {
@@ -173,6 +161,17 @@ namespace Cryptanalysis.F.Experiments {
                     return false;
             }
             return true;
+        }
+
+        private static void PrintFilteringResults(IPrinter mainPrinter, int allDiffsCount, int allCiphertextsCount) {
+            mainPrinter.WriteLine("Filtering done");
+
+            int
+                a = allDiffsCount,
+                b = allCiphertextsCount;
+            mainPrinter.Write("Filtered " + (a - b).ToString() + " out of " + a + " (");
+            mainPrinter.WriteLine(((a - b) * 100 / a).ToString() + " %)");
+            mainPrinter.WriteLine("Remains to test: " + b.ToString() + "\n");
         }
     }
 }

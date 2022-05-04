@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using static Cryptanalysis.Core.Utils;
 
-namespace Cryptanalysis.F.Core {
+namespace Cryptanalysis.Core {
 
     internal class Cipher {
         private readonly Flow flow;

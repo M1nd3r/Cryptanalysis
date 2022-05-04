@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cryptanalysis.F.Core {
+namespace Cryptanalysis.Core {
 
     internal class ConsolePrinter : IPrinter {
 

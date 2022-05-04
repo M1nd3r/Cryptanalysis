@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using Cryptanalysis.Core;
-using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
-using static Cryptanalysis.F.Core.Verifiers;
+using static Cryptanalysis.Core.Verifiers;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
     internal class AttackOnCipherOne : Attack {
 
@@ -84,7 +83,6 @@ namespace Cryptanalysis.F.Experiments {
             mainPrinter.WriteLine(key1);
 
             return true;
-
         }
     }
 }

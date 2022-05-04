@@ -1,4 +1,4 @@
-﻿using Cryptanalysis.F.Experiments;
+﻿using Cryptanalysis.Experiments;
 
 namespace Cryptanalysis {
 

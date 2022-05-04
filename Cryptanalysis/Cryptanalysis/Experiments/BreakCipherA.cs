@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Cryptanalysis.F.Core;
+using Cryptanalysis.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
-using static Cryptanalysis.F.Experiments.Analysis;
-using static Cryptanalysis.F.Experiments.AttackUtils;
+using static Cryptanalysis.Experiments.Analysis;
+using static Cryptanalysis.Experiments.AttackUtils;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
     internal class AttackOnCipherA : Attack {
 
@@ -28,37 +28,15 @@ namespace Cryptanalysis.F.Experiments {
             PrintRecoveredKeys(mainPrinter, key);
             return CompareKeysAndHandleResult(cipher, key, mainPrinter);
         }
-        private static byte[] IdentifyAndGetKey(byte[][] plaintexts, byte[][] ciphertexts, List<MaskProbability> masks) {
-            var solutions = new List<Solution>();
-            for (int i = 0; i < masks.Count; i++) {
-                byte result = GetResultBit(masks[i], plaintexts, ciphertexts);
-                solutions.Add(new Solution(masks[i].Mask, result));
-                if (Solver.TrySolve(solutions, out byte[] key))
-                    return key;
-            }
-            throw new Exception("Key not found!"); //Should not happen
-        }
-        private static List<MaskProbability> GetSBoxMasksForCipherA() {
-            var masks = GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
-            masks.Sort(new ProbabilityComparatorA());
-            return masks;
-        }
+
+        public void BreakCipherAHundredTimes()
+            => BreakCipherRepeatedly(100);
+
         private static bool CompareKeysAndHandleResult(Cipher cipher, byte[] guess, IPrinter printer) {
             var succ = CompareKeysCipherA(GetKeys(cipher), guess);
             printer.WriteLine(GetSuccessOrFailString(succ));
             return succ;
         }
-        private static string GetSuccessOrFailString(bool succ) {
-            if (succ)
-                return GetSuccessString();
-            return GetFailString();
-        }
-        private static string GetSuccessString() => "Success!";
-        private static string GetFailString() => "Fail!";
-
-        public void BreakCipherAHundredTimes()
-            => BreakCipherRepeatedly(100);
-
 
         private static bool CompareKeysCipherA(List<byte[]> realKeys, byte[] guess) {
             for (int i = 0; i < 4; i++) {
@@ -85,6 +63,8 @@ namespace Cryptanalysis.F.Experiments {
             }
             return r;
         }
+
+        private static string GetFailString() => "Fail!";
 
         private static int GetChangeOfCounter(byte resultOfMultiplication) {
             if (resultOfMultiplication == 0)
@@ -120,6 +100,31 @@ namespace Cryptanalysis.F.Experiments {
             if (counter > 0)
                 return Xor(1, add);
             return Xor(0, add);
+        }
+
+        private static List<MaskProbability> GetSBoxMasksForCipherA() {
+            var masks = GetSboxMasks(Cryptanalysis.Core.DefaultFlowChangers.GetSbox4_A());
+            masks.Sort(new ProbabilityComparatorA());
+            return masks;
+        }
+
+        private static string GetSuccessOrFailString(bool succ) {
+            if (succ)
+                return GetSuccessString();
+            return GetFailString();
+        }
+
+        private static string GetSuccessString() => "Success!";
+
+        private static byte[] IdentifyAndGetKey(byte[][] plaintexts, byte[][] ciphertexts, List<MaskProbability> masks) {
+            var solutions = new List<Solution>();
+            for (int i = 0; i < masks.Count; i++) {
+                byte result = GetResultBit(masks[i], plaintexts, ciphertexts);
+                solutions.Add(new Solution(masks[i].Mask, result));
+                if (Solver.TrySolve(solutions, out byte[] key))
+                    return key;
+            }
+            throw new Exception("Key not found!"); //Should not happen
         }
 
         //Heuristically 7 plaintexts is enough

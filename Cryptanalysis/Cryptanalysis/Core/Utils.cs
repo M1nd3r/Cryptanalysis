@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Cryptanalysis.F.Core;
-using Cryptanalysis.F.Experiments;
+using Cryptanalysis.Experiments;
 using static Cryptanalysis.Core.Constants;
 
 namespace Cryptanalysis.Core {

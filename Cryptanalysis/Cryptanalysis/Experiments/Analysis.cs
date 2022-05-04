@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cryptanalysis.F.Common;
-using Cryptanalysis.F.Core;
+using Cryptanalysis.Common;
+using Cryptanalysis.Core;
 using static Cryptanalysis.Core.Utils;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
     internal static class Analysis {
 

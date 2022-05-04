@@ -1,4 +1,4 @@
-﻿using Cryptanalysis.F.Common;
+﻿using Cryptanalysis.Common;
 
 namespace Cryptanalysis.Core {
 

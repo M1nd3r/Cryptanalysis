@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using Cryptanalysis.F.Common;
-using Cryptanalysis.F.Core;
+using Cryptanalysis.Common;
 using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.Core {

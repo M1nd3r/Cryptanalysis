@@ -1,4 +1,4 @@
-﻿namespace Cryptanalysis.F.Core {
+﻿namespace Cryptanalysis.Core {
 
     internal static class Verifiers {
 

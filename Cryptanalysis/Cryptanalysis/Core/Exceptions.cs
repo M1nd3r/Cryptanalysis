@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Cryptanalysis.F.Core {
+namespace Cryptanalysis.Core {
 
     internal class Custom : Exception {
 

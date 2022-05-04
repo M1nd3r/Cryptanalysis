@@ -1,4 +1,4 @@
-﻿namespace Cryptanalysis.F.Core {
+﻿namespace Cryptanalysis.Core {
 
     internal abstract class AChanger {
         protected IPrinter printer = new DummyPrinter();

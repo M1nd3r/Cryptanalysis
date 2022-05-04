@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cryptanalysis.F.Core {
+namespace Cryptanalysis.Core {
 
     internal class Solver {
 

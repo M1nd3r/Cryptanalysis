@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Cryptanalysis.F.Common;
-using Cryptanalysis.F.Core;
-using static Cryptanalysis.F.Core.Verifiers;
+using Cryptanalysis.Common;
+using Cryptanalysis.Core;
+using static Cryptanalysis.Core.Verifiers;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
     internal static class AttackUtils {
 
@@ -21,6 +21,7 @@ namespace Cryptanalysis.F.Experiments {
             }
             return ret;
         }
+
         internal static bool NotContains(this IList<byte[]> list, byte[] value) {
             foreach (var item in list) {
                 if (AreEqual(item, value))

@@ -1,8 +1,8 @@
-﻿using Cryptanalysis.F.Core;
+﻿using Cryptanalysis.Core;
 using static Cryptanalysis.Core.Utils;
-using static Cryptanalysis.F.Core.Verifiers;
+using static Cryptanalysis.Core.Verifiers;
 
-namespace Cryptanalysis.F.Common {
+namespace Cryptanalysis.Common {
 
     internal class XORwithKey : AChanger {
         private readonly byte[] key;
