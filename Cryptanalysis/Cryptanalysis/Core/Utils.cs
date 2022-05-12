@@ -18,6 +18,16 @@ namespace Cryptanalysis.Core {
         internal static byte[] ANDs(byte[] arr1, byte[] arr2)
             => OperationOnByteArrs(arr1, arr2, And);
 
+        internal static bool CompareArrValues(byte[] a, byte[] b) {
+            if (b.Length != a.Length)
+                return false;
+            for (int i = 0; i < a.Length; i++) {
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+
         internal static int[] convertHexString(string s) {
             var r = new int[s.Length];
             for (int i = 0; i < s.Length; i++) {
@@ -82,6 +92,26 @@ namespace Cryptanalysis.Core {
                 sb.Append('-');
             }
             return sb.ToString();
+        }
+
+        internal static byte[] GetPolynomialForLFSR(int[] nonZeroCoeficients) {
+            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
+                if (nonZeroCoeficients[i] < 0)
+                    throw new ArgumentException("Degree of every term must be non-negative!", nameof(nonZeroCoeficients));
+            }
+            int degree = 0;
+            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
+                if (nonZeroCoeficients[i] > degree)
+                    degree = nonZeroCoeficients[i];
+            }
+
+            VerifyMaxDegreeIsNotTooBig(degree);
+            byte[] func = new byte[degree + 1];
+
+            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
+                func[nonZeroCoeficients[i]] = 1;
+            }
+            return func;
         }
 
         internal static byte[] GetRndInput(int len) => GetRndKey(len);
@@ -193,5 +223,11 @@ namespace Cryptanalysis.Core {
 
         internal static byte[] XORs(byte[] arr1, byte[] arr2)
             => OperationOnByteArrs(arr1, arr2, Xor);
+
+        private static void VerifyMaxDegreeIsNotTooBig(int degree) {
+            int limit = 100000;
+            if (degree > limit)
+                throw new ArgumentException("Highest degree must be smaller then " + limit.ToString());
+        }
     }
 }

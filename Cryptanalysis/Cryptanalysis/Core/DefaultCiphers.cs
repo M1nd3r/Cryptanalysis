@@ -54,6 +54,13 @@ namespace Cryptanalysis.Core {
             return new Cipher(l);
         }
 
+        internal static Cipher GetLFSRCipher() {
+            var l = new List<AChanger> {
+                new LFSR3Mix()
+            };
+            return new Cipher(l);
+        }
+
         private static Cipher GetBasicCipher(Sbox4 sbox, IPrinter printer) {
             XORwithKey
                 key0 = new XORwithKey(GetRndKey(4)),

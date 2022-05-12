@@ -20,7 +20,7 @@ namespace Cryptanalysis.Experiments {
             return new SuccessRate(succ, repetitions - succ);
         }
 
-        public virtual void PrintCipherRepeatedlyAndPrintSuccessRate(int repetitions) {
+        public virtual void BreakCipherRepeatedlyAndPrintSuccessRate(int repetitions) {
             PrintSuccessRate(BreakCipherRepeatedly(repetitions));
         }
 

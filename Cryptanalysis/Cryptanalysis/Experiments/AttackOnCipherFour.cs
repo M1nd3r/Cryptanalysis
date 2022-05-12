@@ -110,18 +110,6 @@ namespace Cryptanalysis.Experiments {
             return true;
         }
 
-        private static IList<byte[]> GenerateAllPossibleKeys(int length) {
-            if (length <= 0)
-                throw new ArgumentException("Length cannot be less than one.");
-            if (length >= 29)
-                throw new ArgumentException("This length is too big, it is not supported.");
-            int total = (int)Math.Pow(2, length);
-            var list = new List<byte[]>();
-            for (int i = 0; i < total; i++)
-                list.Add(ConvertToBinary(i, length));
-            return list;
-        }
-
         /// <summary>
         ///
         /// </summary>

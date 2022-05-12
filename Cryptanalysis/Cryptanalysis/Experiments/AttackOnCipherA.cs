@@ -17,8 +17,8 @@ namespace Cryptanalysis.Experiments {
             SetMainPrinter(new ConsolePrinter());
             SetVerbosePrinter(new DummyPrinter());
             SetCipher(GetCipherA(verbosePrinter));
-            var masks = GetSBoxMasksForCipherA();
 
+            var masks = GetSBoxMasksForCipherA();
             var plaintexts = GetPlaintexts(totalPlaintexts, 4);
             var ciphertexts = GetCiphertexts(cipher, in plaintexts);
 
@@ -64,8 +64,6 @@ namespace Cryptanalysis.Experiments {
             return r;
         }
 
-        private static string GetFailString() => "Fail!";
-
         private static int GetChangeOfCounter(byte resultOfMultiplication) {
             if (resultOfMultiplication == 0)
                 return -1;
@@ -107,14 +105,6 @@ namespace Cryptanalysis.Experiments {
             masks.Sort(new ProbabilityComparatorA());
             return masks;
         }
-
-        private static string GetSuccessOrFailString(bool succ) {
-            if (succ)
-                return GetSuccessString();
-            return GetFailString();
-        }
-
-        private static string GetSuccessString() => "Success!";
 
         private static byte[] IdentifyAndGetKey(byte[][] plaintexts, byte[][] ciphertexts, List<MaskProbability> masks) {
             var solutions = new List<Solution>();
