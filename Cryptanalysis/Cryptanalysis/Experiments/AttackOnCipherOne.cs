@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using Cryptanalysis.Core;
-using Cryptanalysis.F.Core;
 using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
-using static Cryptanalysis.F.Core.Verifiers;
+using static Cryptanalysis.Core.Verifiers;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
-    internal static partial class Attacks {
+    internal class AttackOnCipherOne : Attack {
 
-        public static void BreakCipherOne() {
-            var mainPrinter = new ConsolePrinter();
-            var verbosePrinter = new DummyPrinter();
-            var cipherOne = GetCipherOne(verbosePrinter);
-            PrintKeys(cipherOne, mainPrinter);
+        public override bool BreakCipher() {
+            SetMainPrinter(new ConsolePrinter());
+            SetVerbosePrinter(new DummyPrinter());
+            SetCipher(GetCipherOne(verbosePrinter));
+            PrintKeys();
 
             var sbox = DefaultFlowChangers.GetSbox4_1();
             List<byte[]> candK1 = null;
@@ -31,14 +30,14 @@ namespace Cryptanalysis.F.Experiments {
 
                 verbosePrinter.Write("Input_1: ");
                 verbosePrinter.WriteLine(input1);
-                output1 = cipherOne.Encode(input1);
+                output1 = cipher.Encode(input1);
                 verbosePrinter.Write("Output_1: ");
                 verbosePrinter.WriteLine(output1);
                 verbosePrinter.WriteLine("");
 
                 verbosePrinter.Write("Input_2: ");
                 verbosePrinter.WriteLine(input2);
-                output2 = cipherOne.Encode(input2);
+                output2 = cipher.Encode(input2);
                 verbosePrinter.Write("Output_2: ");
                 verbosePrinter.WriteLine(output2);
                 verbosePrinter.WriteLine("");
@@ -69,18 +68,21 @@ namespace Cryptanalysis.F.Experiments {
                     candK1.RemoveAll(candK1Temp.NotContains);
                 }
             }
-            if (candK1.Count != 1)
+            if (candK1.Count != 1) {
                 verbosePrinter.WriteLine("Failure! No key candidate was found!");
-            else {
-                var key1 = candK1[0];
-                byte[] key0_part = XORs(output1, key1);
-                sbox.ApplyInverse(ref key0_part);
-                var key0 = XORs(input1, key0_part);
-                mainPrinter.Write("Result: key_0=");
-                mainPrinter.WriteLine(key0);
-                mainPrinter.Write("Result: key_1=");
-                mainPrinter.WriteLine(key1);
+                return false;
             }
+
+            var key1 = candK1[0];
+            byte[] key0_part = XORs(output1, key1);
+            sbox.ApplyInverse(ref key0_part);
+            var key0 = XORs(input1, key0_part);
+            mainPrinter.Write("Result: key_0=");
+            mainPrinter.WriteLine(key0);
+            mainPrinter.Write("Result: key_1=");
+            mainPrinter.WriteLine(key1);
+
+            return true;
         }
     }
 }

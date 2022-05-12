@@ -1,8 +1,8 @@
 ﻿using System;
-using Cryptanalysis.F.Core;
-using static Cryptanalysis.F.Core.Verifiers;
+using Cryptanalysis.Core;
+using static Cryptanalysis.Core.Verifiers;
 
-namespace Cryptanalysis.F.Common {
+namespace Cryptanalysis.Common {
 
     internal class Permutation : AChanger {
         private readonly int[] table, invTable;

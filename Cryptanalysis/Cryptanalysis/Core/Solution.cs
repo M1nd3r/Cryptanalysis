@@ -1,7 +1,7 @@
 ﻿using System;
 using static Cryptanalysis.Core.Utils;
 
-namespace Cryptanalysis.F.Core {
+namespace Cryptanalysis.Core {
 
     internal class Solution : ICloneable {
         private readonly byte[] mask;

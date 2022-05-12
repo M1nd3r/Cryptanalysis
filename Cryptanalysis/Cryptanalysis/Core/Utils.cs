@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Cryptanalysis.F.Core;
-using Cryptanalysis.F.Experiments;
+using Cryptanalysis.Experiments;
 using static Cryptanalysis.Core.Constants;
 
 namespace Cryptanalysis.Core {
 
     internal static class Utils {
-        internal static Random RAND = new();
+        internal static Random RAND = new Random();
 
         internal static byte And(byte a, byte b) {
             if (a == 1 && b == 1)
@@ -18,6 +17,16 @@ namespace Cryptanalysis.Core {
 
         internal static byte[] ANDs(byte[] arr1, byte[] arr2)
             => OperationOnByteArrs(arr1, arr2, And);
+
+        internal static bool CompareArrValues(byte[] a, byte[] b) {
+            if (b.Length != a.Length)
+                return false;
+            for (int i = 0; i < a.Length; i++) {
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
 
         internal static int[] convertHexString(string s) {
             var r = new int[s.Length];
@@ -85,6 +94,26 @@ namespace Cryptanalysis.Core {
             return sb.ToString();
         }
 
+        internal static byte[] GetPolynomialForLFSR(int[] nonZeroCoeficients) {
+            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
+                if (nonZeroCoeficients[i] < 0)
+                    throw new ArgumentException("Degree of every term must be non-negative!", nameof(nonZeroCoeficients));
+            }
+            int degree = 0;
+            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
+                if (nonZeroCoeficients[i] > degree)
+                    degree = nonZeroCoeficients[i];
+            }
+
+            VerifyMaxDegreeIsNotTooBig(degree);
+            byte[] func = new byte[degree + 1];
+
+            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
+                func[nonZeroCoeficients[i]] = 1;
+            }
+            return func;
+        }
+
         internal static byte[] GetRndInput(int len) => GetRndKey(len);
 
         internal static byte[] GetRndKey(int len) {
@@ -125,7 +154,7 @@ namespace Cryptanalysis.Core {
         }
 
         internal static bool IsBin(byte val)
-            => val is BYTE_ZERO or BYTE_ONE;
+            => val is BYTE_ZERO || val is BYTE_ONE;
 
         internal static bool IsBin(byte val1, byte val2)
             => (val1 == BYTE_ZERO || val1 == BYTE_ONE)
@@ -168,7 +197,7 @@ namespace Cryptanalysis.Core {
         }
 
         internal static void PrintKeys(Cipher cipher, IPrinter printer) {
-            var keys = Attacks.GetKeys(cipher);
+            var keys = AttackUtils.GetKeys(cipher);
             for (int i = 0; i < keys.Count; i++) {
                 printer.Write("key_" + i.ToString() + ": ");
                 printer.WriteLine(keys[i]);
@@ -194,5 +223,11 @@ namespace Cryptanalysis.Core {
 
         internal static byte[] XORs(byte[] arr1, byte[] arr2)
             => OperationOnByteArrs(arr1, arr2, Xor);
+
+        private static void VerifyMaxDegreeIsNotTooBig(int degree) {
+            int limit = 100000;
+            if (degree > limit)
+                throw new ArgumentException("Highest degree must be smaller then " + limit.ToString());
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
-using Cryptanalysis.F.Core;
+using Cryptanalysis.Core;
 using static Cryptanalysis.Core.Utils;
 
-namespace Cryptanalysis.F.Common {
+namespace Cryptanalysis.Common {
 
     internal class Sbox4 : AChanger {
         private readonly (int source, int target)[] table;

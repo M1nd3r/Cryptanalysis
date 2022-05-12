@@ -1,7 +1,7 @@
-﻿using Cryptanalysis.F.Core;
-using static Cryptanalysis.F.Core.Verifiers;
+﻿using Cryptanalysis.Core;
+using static Cryptanalysis.Core.Verifiers;
 
-namespace Cryptanalysis.F.Common {
+namespace Cryptanalysis.Common {
 
     internal class Sbox4x4 : AChanger {
         private readonly Sbox4 sbox;

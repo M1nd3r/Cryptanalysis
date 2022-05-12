@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cryptanalysis.F.Common;
-using Cryptanalysis.F.Core;
+using Cryptanalysis.Common;
+using Cryptanalysis.Core;
 using static Cryptanalysis.Core.Utils;
 
-namespace Cryptanalysis.F.Experiments {
+namespace Cryptanalysis.Experiments {
 
     internal static class Analysis {
 
         internal static List<MaskProbability> GetSboxMasks(Sbox4 sbox) {
             int size = 256; //2^8
-            var masks = new List<byte[]>(size);
-            int[] probability = new int[size];
-            for (int i = 0; i < size; i++) {
-                masks.Add(ConvertToBinary(i, 8));
-            }
             var r = new List<MaskProbability>(size);
-            throw new NotImplementedException();
+            for (int i = 1; i < size; i++) {
+                byte[] mask = (ConvertToBinary(i, 8));
+                int probability = ComputeProbability(sbox, mask);
+                r.Add(new MaskProbability(mask, probability));
+            }
+            return r;
         }
 
         private static int ComputeProbability(Sbox4 sbox, byte[] mask) {
@@ -33,7 +33,7 @@ namespace Cryptanalysis.F.Experiments {
             return p;
         }
 
-        internal class MaskProbability : IComparable {
+        internal class MaskProbability {
             private readonly byte[] mask;
             private readonly int probability;
 
@@ -45,16 +45,6 @@ namespace Cryptanalysis.F.Experiments {
             public int Length => mask.Length;
             public byte[] Mask => mask;
             public int Probability => probability;
-
-            public int CompareTo(object obj) {
-                if (obj is not MaskProbability mp)
-                    throw new ArgumentException("Object is not a " + nameof(MaskProbability), nameof(obj));
-                if (mask.Length < mp.mask.Length)
-                    return -1;
-                if (mask.Length > mp.mask.Length)
-                    return 1;
-                return probability.CompareTo(mp.probability);
-            }
         }
     }
 }
