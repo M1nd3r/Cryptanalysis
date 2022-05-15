@@ -5,7 +5,7 @@ namespace Cryptanalysis {
     internal class Program {
 
         private static void Main(string[] args) {
-            Attack a = new CorrelationAttackOnLFSR();
+            Attack a = new AttackOnCipherOne();
             a.BreakCipherRepeatedlyAndPrintSuccessRate(100);
         }
     }
