@@ -5,6 +5,14 @@ namespace Cryptanalysis.Core {
 
     internal class DefaultFlowChangers {
 
+        internal static LFSR GetFinalLFSR_11_T(byte[] key) => new LFSR(GetPolynomialForLFSR(new int[] { 0, 1, 2, 4, 11 }), key);
+
+        internal static LFSR GetFinalLFSR_11_Y(byte[] key) => new LFSR(GetPolynomialForLFSR(new int[] { 0, 2, 11 }), key);
+
+        internal static LFSR GetFinalLFSR_15_Z(byte[] key) => new LFSR(GetPolynomialForLFSR(new int[] { 0, 1, 15 }), key);
+
+        internal static LFSR GetFinalLFSR_7_X(byte[] key) => new LFSR(GetPolynomialForLFSR(new int[] { 0, 1, 7 }), key);
+
         internal static LFSR GetLFSR_11(byte[] key) => new LFSR(GetPolynomialForLFSR(new int[] { 0, 2, 11 }), key);
 
         internal static LFSR GetLFSR_15(byte[] key) => new LFSR(GetPolynomialForLFSR(new int[] { 0, 1, 15 }), key);

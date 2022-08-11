@@ -48,7 +48,7 @@ namespace Cryptanalysis.Experiments {
             }
             PrintFilteringResults(mainPrinter, allDiffs.Count, allCiphertetxs.Count);
 
-            //Trying all keys
+            //Trying all  keys
             for (int i = 0; i < possibleKeys.Count; i++) {
                 foreach (var (c1, c2) in allCiphertetxs) {
                     var d1 = XORs(possibleKeys[i], c1);

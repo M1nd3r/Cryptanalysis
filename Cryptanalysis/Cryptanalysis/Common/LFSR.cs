@@ -47,7 +47,7 @@ namespace Cryptanalysis.Common {
         private void SetInitialState() {
             this.state = new byte[key.Length];
             for (int i = 0; i < key.Length; i++) {
-                state[i] = key[i];
+                state[key.Length - 1 - i] = key[i];
             }
         }
 
@@ -75,7 +75,7 @@ namespace Cryptanalysis.Common {
 
         private void VerifyKeyIsValid() {
             if (func.Length != key.Length)
-                throw new ArgumentException("The elength of the key is not correct!");
+                throw new ArgumentException("The length of the key is not correct!");
             for (int i = 0; i < key.Length; i++)
                 Verifiers.CheckIsZeroOrOne(key[i]);
         }

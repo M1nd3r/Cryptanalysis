@@ -36,8 +36,14 @@ namespace Cryptanalysis.Experiments {
                 .GetField(
                     "changers",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                .GetValue(cipher)).FindAll(x => x is LFSR3Mix);
-            ;
+                .GetValue(cipher)).FindAll(x => (x is LFSR3Mix || x is FinalCipher));
+
+            var listLFSR7 = ((List<AChanger>)cipher.GetType()
+                .GetField(
+                    "changers",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .GetValue(cipher)).FindAll(x => x is LFSRchanger);
+
             List<byte[]> ret = new List<byte[]>();
             foreach (var xorKey in listXorWithKeys) {
                 var key = (byte[])xorKey.GetType()
@@ -55,6 +61,14 @@ namespace Cryptanalysis.Experiments {
                         System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                     .GetValue(lfsrmix));
             }
+            foreach (var lfsr in listLFSR7) {
+                listLSFR.Add((LFSR)lfsr.GetType()
+                    .GetField(
+                        "LFSR_Dec",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .GetValue(lfsr));
+            }
+
             foreach (var lfsr in listLSFR) {
                 var key = (byte[])lfsr.GetType()
                     .GetField(

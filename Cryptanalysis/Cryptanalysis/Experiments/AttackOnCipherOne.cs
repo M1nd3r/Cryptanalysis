@@ -8,12 +8,15 @@ using static Cryptanalysis.Core.Verifiers;
 namespace Cryptanalysis.Experiments {
 
     internal class AttackOnCipherOne : Attack {
+
         private byte[]
             output1 = null,
             output2,
             input1 = null,
             input2;
-        Sbox4 sbox;
+
+        private Sbox4 sbox;
+
         public override bool BreakCipher() {
             SetMainPrinter(new ConsolePrinter());
             SetVerbosePrinter(new DummyPrinter());
@@ -56,6 +59,7 @@ namespace Cryptanalysis.Experiments {
             PrintResultKeys(key0, key1);
             return true;
         }
+
         private void AttackRound(byte[] inputDiff, ref List<byte[]> candidate) {
             for (int i = 0; i < 16; i++) {
                 var t = ConvertToBinary(i, 4);
@@ -68,12 +72,25 @@ namespace Cryptanalysis.Experiments {
                     candidate.Add(t);
             }
         }
-        private void PrintResultKeys(byte[] key0, byte[] key1) {
-            mainPrinter.Write("Result: key_0=");
-            mainPrinter.WriteLine(key0);
-            mainPrinter.Write("Result: key_1=");
-            mainPrinter.WriteLine(key1);
+
+        private void ComputeOutputs() {
+            output1 = cipher.Encode(input1);
+            output2 = cipher.Encode(input2);
         }
+
+        private void GetTwoDistinctRandomInputs() {
+            input1 = GetRndInput(4);
+            input2 = GetRndInput(4);
+            while (AreEqual(input1, input2))
+                input2 = GetRndInput(4);
+        }
+
+        private void PrintEmptyLine()
+            => verbosePrinter.WriteLine("");
+
+        private void PrintInput(byte[] input, int id)
+            => PrintTextAndArr(string.Format("Input_{0}: ", id), input);
+
         private void PrintInputsAndOutputs() {
             PrintInput(input1, 1);
             PrintOutput(output1, 1);
@@ -81,30 +98,23 @@ namespace Cryptanalysis.Experiments {
             PrintInput(input2, 2);
             PrintOutput(output2, 2);
         }
-        private void PrintInput(byte[] input, int id)
-            => PrintTextAndArr(string.Format("Input_{0}: ", id), input);
 
         private void PrintOutput(byte[] output, int id)
             => PrintTextAndArr(string.Format("Output_{0}: ", id), output);
 
-        private void PrintEmptyLine()
-            => verbosePrinter.WriteLine("");
+        private void PrintResultKeys(byte[] key0, byte[] key1) {
+            mainPrinter.Write("Result: key_0=");
+            mainPrinter.WriteLine(key0);
+            mainPrinter.Write("Result: key_1=");
+            mainPrinter.WriteLine(key1);
+        }
+
         private void PrintTextAndArr(string text, byte[] arr) {
             verbosePrinter.Write(text);
             verbosePrinter.WriteLine(arr);
         }
-        private void GetTwoDistinctRandomInputs() {
-            input1 = GetRndInput(4);
-            input2 = GetRndInput(4);
-            while (AreEqual(input1, input2))
-                input2 = GetRndInput(4);
-        }
-        private void ComputeOutputs() {
-            output1 = cipher.Encode(input1);
-            output2 = cipher.Encode(input2);
-        }
+
         private void SetSBox()
             => sbox = DefaultFlowChangers.GetSbox4_1();
-
     }
 }

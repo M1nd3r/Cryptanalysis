@@ -43,7 +43,7 @@ namespace Cryptanalysis.Experiments {
         }
 
         private byte[] BreakFirstLFSR() {
-            return BreakLFSR(GetLFSR_7, 8);
+            return BreakLFSR(GetLFSR_7, 7);
         }
 
         private byte[] BreakLFSR(Func<byte[], LFSR> lfsrGenerator, int len) {
@@ -53,17 +53,20 @@ namespace Cryptanalysis.Experiments {
                 LFSR reg = lfsrGenerator(possibleKeys[i]);
                 var newCiphertext = reg.Encode(plaintext);
                 resultList.Add(new KeyProbability(possibleKeys[i], ComputeLikness(newCiphertext)));
+                verbosePrinter.Write(possibleKeys[i]);
+                verbosePrinter.Write(" ");
+                verbosePrinter.WriteLine(ComputeLikness(newCiphertext).ToString());
             }
             resultList.Sort();
             return resultList[0].key;
         }
 
         private byte[] BreakSecondLFSR() {
-            return BreakLFSR(GetLFSR_11, 12);
+            return BreakLFSR(GetLFSR_11, 11);
         }
 
         private byte[] BreakThirdLFSR() {
-            return BreakLFSR(GetLFSR_15, 16);
+            return BreakLFSR(GetLFSR_15, 15);
         }
 
         private bool CompareKeys(List<byte[]> keys, byte[][] guess) {

@@ -28,7 +28,7 @@ namespace Cryptanalysis.Core {
             return true;
         }
 
-        internal static int[] convertHexString(string s) {
+        internal static int[] ConvertHexString(string s) {
             var r = new int[s.Length];
             for (int i = 0; i < s.Length; i++) {
                 r[i] = HexToByte(s[i]);
@@ -77,7 +77,7 @@ namespace Cryptanalysis.Core {
             if (s.Length != 16)
                 throw new ArgumentException("The string does not define bijective sbox");
             var table = new (int, int)[s.Length];
-            var res = convertHexString(s);
+            var res = ConvertHexString(s);
             for (int i = 0; i < s.Length; i++) {
                 table[i] = (i, res[i]);
             }
@@ -106,10 +106,10 @@ namespace Cryptanalysis.Core {
             }
 
             VerifyMaxDegreeIsNotTooBig(degree);
-            byte[] func = new byte[degree + 1];
+            byte[] func = new byte[degree];
 
-            for (int i = 0; i < nonZeroCoeficients.Length; i++) {
-                func[nonZeroCoeficients[i]] = 1;
+            for (int i = 1; i < nonZeroCoeficients.Length; i++) {
+                func[nonZeroCoeficients[i] - 1] = 1;
             }
             return func;
         }
@@ -146,6 +146,22 @@ namespace Cryptanalysis.Core {
             };
         }
 
+        internal static double CheckSimilarity(byte[] a, byte[] b, List<int> validPoints = null) {
+            int t = 0;
+            if (validPoints == null || validPoints.Count == 0) {
+                for (int i = 0; i < Math.Min(a.Length, b.Length); i++) {
+                    if (a[i] == b[i])
+                        t++;
+                }
+                return t / (double)Math.Min(a.Length, b.Length);
+            }
+            foreach (var validPoint in validPoints) {
+                if (a[validPoint] == b[validPoint])
+                    t++;
+            }
+            return t / (double)validPoints.Count;
+        }
+
         internal static (int source, int target)[] Invert(this (int source, int target)[] table) {
             (int source, int target)[] r = new (int, int)[table.Length];
             for (int i = 0; i < table.Length; i++)
@@ -171,6 +187,12 @@ namespace Cryptanalysis.Core {
             foreach (var b in x)
                 r = Xor(r, b);
             return r;
+        }
+
+        internal static byte Neg(byte a) {
+            if (a == 1)
+                return 0;
+            return 1;
         }
 
         internal static byte[] OperationOnByteArrs(byte[] arr1, byte[] arr2, Func<byte, byte, byte> byteOperation) {

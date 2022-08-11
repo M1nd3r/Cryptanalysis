@@ -4,27 +4,34 @@ using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.Common {
 
-    internal class LFSR3Mix : AChanger {
+    internal abstract class AFinalCipher : AChanger {
 
-        private readonly LFSR[]
+        protected readonly LFSR[]
             LFSR_Enc,
             LFSR_Dec;
 
-        public LFSR3Mix() {
-            byte[]
-                key7 = GetRndKey(7),
-                key11 = GetRndKey(11),
-                key15 = GetRndKey(15);
+        protected AFinalCipher(byte[] key7x, byte[] key11y, byte[] key15z, byte[] key11t) {
             LFSR_Enc = new LFSR[] {
-                GetLFSR_7(key7),
-                GetLFSR_11(key11),
-                GetLFSR_15(key15)
+                GetFinalLFSR_7_X(key7x),
+                GetFinalLFSR_11_Y(key11y),
+                GetFinalLFSR_15_Z(key15z),
+                GetFinalLFSR_11_T(key11t)
             };
             LFSR_Dec = new LFSR[] {
-                GetLFSR_7(key7),
-                GetLFSR_11(key11),
-                GetLFSR_15(key15)
+                GetFinalLFSR_7_X(key7x),
+                GetFinalLFSR_11_Y(key11y),
+                GetFinalLFSR_15_Z(key15z),
+                GetFinalLFSR_11_T(key11t)
             };
+        }
+    }
+
+    internal class FinalCipher : AFinalCipher {
+
+        public FinalCipher(byte[] key7x, byte[] key11y, byte[] key15z, byte[] key11t)
+            : base(key7x, key11y, key15z, key11t) { }
+
+        public FinalCipher() : base(GetRndKey(7), GetRndKey(11), GetRndKey(15), GetRndKey(11)) {
         }
 
         protected override void ApplyInternal(ref byte[] arr) {
@@ -42,11 +49,12 @@ namespace Cryptanalysis.Common {
             for (int i = 0; i < registers.Length; i++) {
                 nextBits[i] = registers[i].GetNextBit();
             }
-            byte r = 0;
-            r = Xor(r, And(nextBits[0], nextBits[1]));
+            var r = And(nextBits[0], nextBits[1]);
             r = Xor(r, And(nextBits[1], nextBits[2]));
             r = Xor(r, And(nextBits[2], nextBits[0]));
-            return r;
+            if (r == 1)
+                return nextBits[3];
+            return Neg(nextBits[3]);
         }
     }
 }
