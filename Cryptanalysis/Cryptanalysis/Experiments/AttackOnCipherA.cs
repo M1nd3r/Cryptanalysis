@@ -23,7 +23,7 @@ namespace Cryptanalysis.Experiments {
             var ciphertexts = GetCiphertexts(cipher, in plaintexts);
 
             PrintKeys();
-
+                
             var key = IdentifyAndGetKey(plaintexts, ciphertexts, masks);
             PrintRecoveredKeys(mainPrinter, key);
             return CompareKeysAndHandleResult(cipher, key, mainPrinter);
