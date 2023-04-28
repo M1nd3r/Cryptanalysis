@@ -20,11 +20,11 @@ namespace Cryptanalysis.Experiments {
             SetCipher(GetCipherFour(verbosePrinter));
             PrintKeys();
 
-            //Hardcoded difference
+            // Hardcoded difference
             string diff = "0000000000100000";
             byte[] diff_byte = ConvertToByteArr("0000000000100000");
 
-            //Preparing test pairs, keys, end-of-the-cipher parts
+            // Preparing test pairs, keys, end-of-the-cipher parts
             var allDiffs = GeneratePlaintextPairsWithGivenDifference(diff, precision);
 
             var sbox = DefaultFlowChangers.GetSbox4_1();
@@ -37,7 +37,7 @@ namespace Cryptanalysis.Experiments {
 
             var allCiphertetxs = new List<(byte[] c1, byte[] c2)>();
 
-            //Filtering
+            // Filtering
             mainPrinter.WriteLine("Start of Filtering ");
             InitializeFiltering();
             foreach (var (a, b) in allDiffs) {
@@ -48,7 +48,7 @@ namespace Cryptanalysis.Experiments {
             }
             PrintFilteringResults(mainPrinter, allDiffs.Count, allCiphertetxs.Count);
 
-            //Trying all  keys
+            // Trying all  keys
             for (int i = 0; i < possibleKeys.Count; i++) {
                 foreach (var (c1, c2) in allCiphertetxs) {
                     var d1 = XORs(possibleKeys[i], c1);
@@ -63,7 +63,7 @@ namespace Cryptanalysis.Experiments {
                 mainPrinter.WriteLine(": " + score[i]);
             }
 
-            //Getting maximal value of the array
+            // Getting maximal value of the array
             int t = 0, index = 0;
             for (int i = 0; i < score.Length; i++) {
                 if (score[i] > t) {
@@ -72,11 +72,11 @@ namespace Cryptanalysis.Experiments {
                 }
             }
 
-            //Printing result - most probable key part
+            // Printing result - most probable key part
             mainPrinter.Write("Expected key part result is: ");
             mainPrinter.WriteLine(possibleKeyParts[index]);
 
-            //Comparation with real keys
+            // Comparation with real keys
             var realKeys = GetKeys(cipher);
             if (IsThirdPartTheSame(realKeys[5], possibleKeys[index])) {
                 mainPrinter.WriteLine("Success! Key part correctly guessed.");
@@ -127,7 +127,7 @@ namespace Cryptanalysis.Experiments {
             var list = new List<(byte[] a, byte[] b)>();
             byte[] diff_byte = ConvertToByteArr(diff);
 
-            //TODO - Not efficient, all pairs are doubled (i.e. for each (t1,t2) there is also (t2,t1) generated
+            // The following code is not efficient - all pairs are doubled, i.e. for each (t1,t2) there is also (t2,t1) generated.
             for (int i = 0; i < total; i++) {
                 byte[] t1 = ConvertToBinary(i, length);
                 byte[] t2 = XORs(t1, diff_byte);

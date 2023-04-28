@@ -30,7 +30,7 @@ namespace Cryptanalysis.Experiments {
             plaintext = GetRndInput(plaintextLength);
             SetCiphertext();
 
-            //Comparing output with output of single LFSR
+            // Comparing output with output of single LFSR
             var realKeys = GetKeys(cipher);
             var comparingLFSR = CreateCipherFromLFSR(new LFSRchanger(realKeys[0], GetLFSR_7));
             var verifyLFSR = CreateCipherFromLFSR(new LFSRchanger(realKeys[0], GetLFSR_7));

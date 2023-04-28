@@ -55,7 +55,7 @@ namespace Cryptanalysis.Experiments {
         }
 
         private static byte[][] GetCiphertexts(Cipher c, in byte[][] plaintexts) {
-            var r = new byte[plaintexts.GetLength(0)][]; //TODO test if dim 0 or dim 1
+            var r = new byte[plaintexts.GetLength(0)][];
             for (int i = 0; i < plaintexts.GetLength(0); i++) {
                 byte[] t = new byte[plaintexts[i].Length];
                 Array.Copy(plaintexts[i], t, t.Length);
@@ -117,7 +117,7 @@ namespace Cryptanalysis.Experiments {
             throw new Exception("Key not found!"); //Should not happen
         }
 
-        //Heuristically 7 plaintexts is enough
+        // Heuristically, 7 plaintexts is enough.
         private static void PrintRecoveredKeys(IPrinter p, byte[] keys) {
             p.WriteLine("Discovered keys:");
             p.WriteLine(keys.SubArray(0, 4));

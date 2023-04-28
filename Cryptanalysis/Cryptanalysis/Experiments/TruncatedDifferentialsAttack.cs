@@ -15,24 +15,24 @@ namespace Cryptanalysis.Experiments {
         private Dictionary<byte[], IList<BitstringPair>> dic = new Dictionary<byte[], IList<BitstringPair>>();
 
         public override bool BreakCipher() {
-            int precision = 16; //Negative number - all pairs, otherwise determines number of pairs
+            int precision = 16; // Negative number - all pairs, otherwise determines number of pairs
 
             SetMainPrinter(new ConsolePrinter());
             SetVerbosePrinter(new DummyPrinter());
             SetCipher(GetCipherFour(verbosePrinter));
             PrintKeys();
 
-            //Number of runs generating message pairs (1 run is 16 message pairs);
+            // Number of runs generating message pairs (1 run is 16 message pairs);
             int runs = (int)Math.Ceiling(precision / 16d);
 
             var possibleKey0Nibbles = GenerateAllPossibleKeys(4);
 
-            //Find pairs with difference 0010 after first round
+            // Find pairs with difference 0010 after first round
 
             foreach (var keyNibble in possibleKey0Nibbles)
                 dic.Add(keyNibble, GetMessagePairs(keyNibble, runs));
 
-            //Recovering correct key0 nibble
+            // Recovering correct key0 nibble
             foreach (byte[] keyNibble in dic.Keys) {
                 if (IsImpossibleKey(keyNibble))
                     dic.Remove(keyNibble);
@@ -42,7 +42,7 @@ namespace Cryptanalysis.Experiments {
                 mainPrinter.Write("Guessed key0 nibble is: ");
                 mainPrinter.WriteLine(dic.Keys.First());
 
-                //Comparation with real keys
+                // Comparation with real keys
                 return HandleResult();
             }
 

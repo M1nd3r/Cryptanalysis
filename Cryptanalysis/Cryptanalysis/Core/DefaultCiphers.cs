@@ -65,8 +65,7 @@ namespace Cryptanalysis.Core {
         }
 
         internal static Cipher GetSofisticatedCipher(IPrinter printer, Sbox4 sbox) {
-            //Definition of cipher elements
-
+            // Definition of cipher elements
             XORwithKey[] keys = GetRandomKeys();
 
             var perm = new Permutation(ParseParmutationTable("0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15"));

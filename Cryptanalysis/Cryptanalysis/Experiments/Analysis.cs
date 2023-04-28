@@ -9,7 +9,7 @@ namespace Cryptanalysis.Experiments {
     internal static class Analysis {
 
         internal static List<MaskProbability> GetSboxMasks(Sbox4 sbox) {
-            int size = 256; //2^8
+            int size = 256; // 2^8
             var r = new List<MaskProbability>(size);
             for (int i = 1; i < size; i++) {
                 byte[] mask = (ConvertToBinary(i, 8));

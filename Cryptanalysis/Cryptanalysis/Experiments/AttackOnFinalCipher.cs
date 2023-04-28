@@ -104,7 +104,7 @@ namespace Cryptanalysis.Experiments {
             return bestGuess.GetKeyXY;
         }
 
-        //Generates all possible combinations (127) for LFSR_X (ignoring all-zeroes key)
+        // Generates all possible combinations (127) for LFSR_X (ignoring all-zeroes key)
         private IList<KeyCiphertext> PhaseOne() {
             var keys = GenerateAllPossibleKeys(7);
             IList<KeyCiphertext> pairs = new List<KeyCiphertext>();
@@ -169,7 +169,7 @@ namespace Cryptanalysis.Experiments {
             public byte[] GetKey { get => keyX; }
         }
 
-        //Generates all possible combinations (2047) for LFSR_T (ignoring all-zeroes key)
+        // Generates all possible combinations (2047) for LFSR_T (ignoring all-zeroes key)
         private class KeyXkeyTmaxProb {
 
             private readonly byte[]

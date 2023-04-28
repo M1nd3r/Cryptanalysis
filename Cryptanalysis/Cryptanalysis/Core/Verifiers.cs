@@ -1,4 +1,6 @@
-﻿namespace Cryptanalysis.Core {
+﻿using System;
+
+namespace Cryptanalysis.Core {
 
     internal static class Verifiers {
 
@@ -25,6 +27,12 @@
             if (a == 1)
                 return;
             throw new CheckException("Given byte in not zero or one. Its value is " + a.ToString());
+        }
+
+        internal class CheckException : Exception {
+
+            public CheckException(string message) : base(message) {
+            }
         }
     }
 }
