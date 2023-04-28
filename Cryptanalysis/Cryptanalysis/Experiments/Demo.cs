@@ -37,7 +37,7 @@ namespace Cryptanalysis.Experiments {
         private static void ProceedToNextAttack() {
             while (Console.KeyAvailable)
                 Console.ReadKey(false);
-            Console.WriteLine("\n>>> To proceed to the next attack press <Enter>. <<<");
+            Console.WriteLine("\n>>> To proceed to the next attack, press <Enter>. <<<");
             ConsoleKeyInfo ck = Console.ReadKey(true);
             while (ck.Key != ConsoleKey.Enter)
                 ck = Console.ReadKey(true);
