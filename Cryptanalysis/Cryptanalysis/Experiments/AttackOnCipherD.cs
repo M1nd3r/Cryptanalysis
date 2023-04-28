@@ -4,7 +4,9 @@ using static Cryptanalysis.Core.DefaultCiphers;
 using static Cryptanalysis.Core.Utils;
 
 namespace Cryptanalysis.Experiments {
-    class AttackOnCipherD : Attack {
+
+    internal class AttackOnCipherD : Attack {
+
         private IList<byte[]>
             plaintexts,
             ciphertexts;
@@ -20,7 +22,6 @@ namespace Cryptanalysis.Experiments {
             GeneratePlaintexts(numberOfPlaintexts);
             GenerateCiphertexts();
 
-
             PrintXorOfFirstPositionOnAllKeys(mainPrinter);
 
             var r = CountXorsInTexts();
@@ -31,28 +32,7 @@ namespace Cryptanalysis.Experiments {
 
             return HandleResult(GetResultBasedOnR(r) == testXor[0]);
         }
-        private bool HandleResult(bool succ) {
-            if (succ) {
-                HandleSucc();
-                return succ;
-            }
-            HandleFail();
-            return succ;
-        }
-        private void HandleSucc() {
-            mainPrinter.WriteLine("Success!");
-            mainPrinter.WriteLine(GetHyphens(20));
-        }
-        private void HandleFail() {
-            mainPrinter.WriteLine("Failed! Incorrect guess.");
-            mainPrinter.WriteLine(GetHyphens(20));
 
-        }
-        private byte GetResultBasedOnR(int r) {
-            if (r < plaintexts.Count / 2)
-                return 0;
-            return 1;
-        }
         private int CountXorsInTexts() {
             int r = 0;
             for (int i = 0; i < plaintexts.Count; i++) {
@@ -61,16 +41,44 @@ namespace Cryptanalysis.Experiments {
             }
             return r;
         }
-        private void GeneratePlaintexts(int numberOfPlatintexts) {
-            plaintexts = new List<byte[]>();
-            for (int i = 0; i < numberOfPlatintexts; i++)
-                plaintexts.Add(GetRndInput(16));
-        }
+
         private void GenerateCiphertexts() {
             ciphertexts = new List<byte[]>();
             foreach (var p in plaintexts)
                 ciphertexts.Add(cipher.Encode(p));
         }
+
+        private void GeneratePlaintexts(int numberOfPlatintexts) {
+            plaintexts = new List<byte[]>();
+            for (int i = 0; i < numberOfPlatintexts; i++)
+                plaintexts.Add(GetRndInput(16));
+        }
+
+        private byte GetResultBasedOnR(int r) {
+            if (r < plaintexts.Count / 2)
+                return 0;
+            return 1;
+        }
+
+        private void HandleFail() {
+            mainPrinter.WriteLine("Failed! Incorrect guess.");
+            mainPrinter.WriteLine(GetHyphens(20));
+        }
+
+        private bool HandleResult(bool succ) {
+            if (succ) {
+                HandleSucc();
+                return succ;
+            }
+            HandleFail();
+            return succ;
+        }
+
+        private void HandleSucc() {
+            mainPrinter.WriteLine("Success!");
+            mainPrinter.WriteLine(GetHyphens(20));
+        }
+
         private void PrintXorOfFirstPositionOnAllKeys(IPrinter printer) {
             printer.WriteLine("Xor on first position of the keys: " + XorAllKeys()[0].ToString());
         }
@@ -82,6 +90,5 @@ namespace Cryptanalysis.Experiments {
                 r = XORs(key, r);
             return r;
         }
-
     }
 }

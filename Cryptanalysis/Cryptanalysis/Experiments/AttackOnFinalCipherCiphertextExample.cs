@@ -2,7 +2,7 @@
 
 namespace Cryptanalysis.Experiments {
 
-    internal class AttackOnFinalCiphertextExample : AttackOnFinalCipher {
+    internal class AttackOnFinalCipherCiphertextExample : AttackOnFinalCipher {
 
         public override void SetCipherAndCiphertext(byte[] plaintext) {
             SetCipher(GetFinalCipher(
