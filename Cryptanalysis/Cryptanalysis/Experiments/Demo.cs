@@ -5,6 +5,29 @@ namespace Cryptanalysis.Experiments {
     internal class Demo {
 
         internal static void Show() {
+            PrintDemoString();
+            Action[] attacks = GetDefaultDemoAttacks();
+            foreach (var attack in attacks) {
+                ProceedToNextAttack();
+                attack();
+            }
+        }
+
+        private static Action[] GetDefaultDemoAttacks() {
+            Action[] attacks = {
+                () => new AttackOnCipherD().BreakCipherRepeatedlyAndPrintSuccessRate(100),
+                () => new AttackOnCipherA().BreakCipher(),
+                () => new AttackOnCipherFour().BreakCipherRepeatedlyAndPrintSuccessRate(10),
+                () => new TruncatedDifferentialsAttack().BreakCipherRepeatedlyAndPrintSuccessRate(10),
+                () => new CorrelationAttackOnLFSR().BreakCipher(),
+                () => new FastCorrelationAttackOnLFSR().BreakCipher(),
+                () => new AttackOnFinalCipher().BreakCipher(),
+                () => new AttackOnFinalCipherCiphertextExample().BreakCipher()
+            };
+            return attacks;
+        }
+
+        private static void PrintDemoString() {
             Console.WriteLine("This simple demo shows the output of some of the experiments. The experiments included in this demo are the following:" +
                 "\n -> AttackOnCipherD.BreakCipherRepeatedlyAndPrintSuccessRate(100)" +
                 "\n -> AttackOnCipherA.BreakCipher()" +
@@ -16,22 +39,6 @@ namespace Cryptanalysis.Experiments {
                 "\n -> AttackOnFinalCipherCiphertextExample.BreakCipher()" +
                 "\n \n After an attack is finished, you can proceed to the next one by pressing <Enter>."
             );
-
-            Action[] attacks = {
-                () => new AttackOnCipherD().BreakCipherRepeatedlyAndPrintSuccessRate(100),
-                () => new AttackOnCipherA().BreakCipher(),
-                () => new AttackOnCipherFour().BreakCipherRepeatedlyAndPrintSuccessRate(10),
-                () => new TruncatedDifferentialsAttack().BreakCipherRepeatedlyAndPrintSuccessRate(10),
-                () => new CorrelationAttackOnLFSR().BreakCipher(),
-                () => new FastCorrelationAttackOnLFSR().BreakCipher(),
-                () => new AttackOnFinalCipher().BreakCipher(),
-                () => new AttackOnFinalCipherCiphertextExample().BreakCipher()
-            };
-
-            foreach (var attack in attacks) {
-                ProceedToNextAttack();
-                attack();
-            }
         }
 
         private static void ProceedToNextAttack() {
